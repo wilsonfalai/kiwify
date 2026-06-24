@@ -640,7 +640,15 @@ components:
     AsaasWebhookPayload:
       type: object
       required: [event, payment]
+      description: >
+        Raw Asaas webhook input. The API must validate the configured security
+        mechanism before persistence and must store only a safe subset plus a
+        canonical idempotency key.
       properties:
+        id:
+          type: string
+          nullable: true
+          description: Provider event identifier when present; preferred source for externalEventId.
         event:
           type: string
         payment:

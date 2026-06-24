@@ -8,6 +8,8 @@
 - Soft deletion is not part of the MVP unless represented by a status field.
 - Sensitive card data is never persisted.
 - External provider raw payloads must be redacted or stored only as safe subsets.
+- Canonical business status enums are `Order.status = pending | paid | refused | canceled`
+  and `Payment.status = pending | approved | refused | canceled`.
 
 ## Entity: User
 
@@ -327,7 +329,7 @@ admins.
 
 - `id`: UUID, primary key
 - `provider`: enum `asaas`, required
-- `externalEventId`: string, required
+- `externalEventId`: string, optional
 - `eventType`: string, required
 - `idempotencyKey`: string, required
 - `receivedAt`: timestamp
@@ -343,7 +345,13 @@ admins.
 **Validation Rules**:
 
 - Store only safe payload fields needed for audit and reconciliation.
+- `idempotencyKey` is `provider + ":" + externalEventId` when the provider event
+  ID is present. If missing, it must be derived deterministically from stable safe
+  payload fields such as provider, event type, external charge ID, external status,
+  and provider event timestamp.
 - Duplicate events must resolve to `ignored` or no-op without duplicate business effects.
+- Raw webhook payloads, API keys, webhook tokens, passwords, CVV, full card
+  numbers, and complete card details must not be stored in this table.
 
 ## Entity: DomainEvent
 

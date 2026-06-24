@@ -162,7 +162,7 @@ obrigatórias passarem.
 - Pagamento recusado não libera matrícula/acesso.
 - Falha temporária no processamento assíncrono mantém evento auditável para
   reprocessamento seguro.
-- Cartão recusado mostra status de falha sem armazenar dados sensíveis.
+- Cartão recusado mostra status recusado sem armazenar dados sensíveis.
 - Dados de Pix ausentes no retorno deixam o pedido pendente e orientam o
   comprador com status claro.
 - Usuário produtor não pode administrar produtos de outro produtor.
@@ -184,7 +184,7 @@ obrigatórias passarem.
 - **FR-009**: A página pública MUST exibir somente produtos ativos com ofertas ativas.
 - **FR-010**: A página pública MUST exibir título, descrição, preço, imagem opcional e ação de compra para produto/oferta elegível.
 - **FR-011**: O checkout MUST aceitar somente ofertas ativas e métodos de pagamento permitidos pela oferta.
-- **FR-012**: O checkout MUST coletar os dados necessários do comprador para criar pedido e iniciar pagamento.
+- **FR-012**: O checkout MUST coletar nome, email, documento fiscal quando exigido pelo método/provedor, telefone quando exigido pelo provedor e dados transitórios de cartão somente para pagamento por cartão.
 - **FR-013**: O checkout MUST criar um pedido antes de solicitar a cobrança externa.
 - **FR-014**: O checkout MUST suportar pagamento por Pix no MVP.
 - **FR-015**: O checkout MUST suportar pagamento por cartão de crédito no MVP.
@@ -229,6 +229,8 @@ obrigatórias passarem.
 - **FR-054**: `/docs` MUST cover product vision, architecture, data model, Asaas payment flow, Vercel plus Dokploy deploy flow, technical decisions, and testing strategy.
 - **FR-055**: Every critical action MUST have automated validation required for completion.
 - **FR-056**: O MVP MUST permanecer preparado para adicionar ou trocar provedores de pagamento no futuro sem alterar comportamento central do domínio.
+- **FR-057**: Webhooks do Asaas MUST usar uma chave idempotente canônica baseada em `provider + externalEventId` quando o identificador externo existir, com fallback determinístico documentado a partir de campos estáveis do payload seguro.
+- **FR-058**: Testes de segurança MUST verificar que logs, tabelas auditáveis e respostas administrativas não exponham `ASAAS_API_KEY`, `ASAAS_WEBHOOK_TOKEN`, senhas, CVV, número completo de cartão ou payload bruto sensível.
 
 ### Automated Validation *(mandatory)*
 

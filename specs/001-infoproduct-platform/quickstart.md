@@ -73,6 +73,27 @@ packages/test-utils
 The domain must call payment behavior through `PaymentProvider`. Asaas-specific
 behavior belongs in `AsaasPaymentProvider`.
 
+Canonical MVP statuses:
+
+- Orders: `pending`, `paid`, `refused`, `canceled`.
+- Payments: `pending`, `approved`, `refused`, `canceled`.
+
+Checkout buyer data:
+
+- Required base fields: name and email.
+- Document and phone are required when the selected Asaas payment flow requires
+  them.
+- Credit-card fields are transient request data and must never be persisted.
+
+Webhook idempotency:
+
+- Prefer `provider + externalEventId` for the idempotency key.
+- If the provider event ID is absent, derive a deterministic fallback from stable
+  safe payload fields: provider, event type, external charge ID, external status,
+  and provider event timestamp.
+- Duplicate keys must not enqueue duplicate business effects or create duplicate
+  paid orders, enrollments, or access.
+
 ## Manual MVP Flow
 
 1. Sign in as a producer.
@@ -125,6 +146,8 @@ Implementation must create or update:
 - Pix flow creates pending payment and shows returned Pix instructions when
   available.
 - Credit-card flow never persists sensitive card data.
+- Logs, admin responses, and audit tables do not expose API keys, webhook tokens,
+  passwords, CVV, full card number, or complete card details.
 - Asaas webhook security validation rejects invalid requests.
 - Duplicate approved webhooks produce exactly one paid order and one enrollment.
 - Members area blocks users without active enrollment.
