@@ -54,47 +54,47 @@
 
 ## FASE 3: Banco de dados e Drizzle
 
-- [ ] T019 Configurar Drizzle em `packages/database`
+- [X] T019 Configurar Drizzle em `packages/database`
   - Objetivo: Centralizar Drizzle config. Arquivos prováveis: `packages/database/drizzle.config.ts`, `packages/database/package.json`. Critério de aceite: Drizzle reconhece schema e pasta migrations. Teste obrigatório: drizzle config load. Comando para validar: `pnpm --filter @kiwifyclone/database test:unit -- --run drizzle-config`
-- [ ] T020 Criar schema inicial em `packages/database/src/schema`
+- [X] T020 Criar schema inicial em `packages/database/src/schema`
   - Objetivo: Definir exports de schema Drizzle. Arquivos prováveis: `packages/database/src/schema/index.ts`. Critério de aceite: schema compila e exporta tabelas. Teste obrigatório: typecheck database. Comando para validar: `pnpm --filter @kiwifyclone/database typecheck`
-- [ ] T021 Criar migrations em `packages/database/drizzle`
+- [X] T021 Criar migrations em `packages/database/drizzle`
   - Objetivo: Gerar migration inicial controlada. Arquivos prováveis: `packages/database/drizzle/*.sql`, `packages/database/src/migrate.ts`. Critério de aceite: migration contém todas as tabelas iniciais. Teste obrigatório: migration smoke. Comando para validar: `pnpm --filter @kiwifyclone/database test:integration -- --run migrations`
-- [ ] T022 Criar conexão PostgreSQL em `packages/database/src/client.ts`
+- [X] T022 Criar conexão PostgreSQL em `packages/database/src/client.ts`
   - Objetivo: Expor cliente Drizzle por `DATABASE_URL`. Arquivos prováveis: `packages/database/src/client.ts`, `packages/database/src/env.ts`. Critério de aceite: cliente conecta usando env e falha com mensagem clara sem env. Teste obrigatório: integration db connection. Comando para validar: `pnpm --filter @kiwifyclone/database test:integration -- --run connection`
-- [ ] T023 Criar helper de testes com banco em `packages/test-utils/src/database`
+- [X] T023 Criar helper de testes com banco em `packages/test-utils/src/database`
   - Objetivo: Preparar setup/teardown transacional. Arquivos prováveis: `packages/test-utils/src/database.ts`, `packages/test-utils/src/factories.ts`. Critério de aceite: testes criam dados e limpam estado. Teste obrigatório: helper integration. Comando para validar: `pnpm --filter @kiwifyclone/test-utils test:integration -- --run database-helper`
-- [ ] T024 Criar tabela `users` em `packages/database/src/schema/users.ts`
+- [X] T024 Criar tabela `users` em `packages/database/src/schema/users.ts`
   - Objetivo: Persistir identidades autenticadas. Arquivos prováveis: `packages/database/src/schema/users.ts`, `packages/database/drizzle/*.sql`. Critério de aceite: campos e unique email existem. Teste obrigatório: schema assertion. Comando para validar: `pnpm --filter @kiwifyclone/database test:unit -- --run users-schema`
-- [ ] T025 Criar tabela `producer_profiles` em `packages/database/src/schema/producers.ts`
+- [X] T025 Criar tabela `producer_profiles` em `packages/database/src/schema/producers.ts`
   - Objetivo: Persistir perfil de produtor. Arquivos prováveis: `packages/database/src/schema/producers.ts`. Critério de aceite: FK para users e status existem. Teste obrigatório: schema assertion. Comando para validar: `pnpm --filter @kiwifyclone/database test:unit -- --run producer-profiles-schema`
-- [ ] T026 Criar tabela `customer_profiles` em `packages/database/src/schema/customers.ts`
+- [X] T026 Criar tabela `customer_profiles` em `packages/database/src/schema/customers.ts`
   - Objetivo: Persistir perfil comprador. Arquivos prováveis: `packages/database/src/schema/customers.ts`. Critério de aceite: FK para users e dados mínimos existem. Teste obrigatório: schema assertion. Comando para validar: `pnpm --filter @kiwifyclone/database test:unit -- --run customer-profiles-schema`
-- [ ] T027 Criar tabela `products` em `packages/database/src/schema/products.ts`
+- [X] T027 Criar tabela `products` em `packages/database/src/schema/products.ts`
   - Objetivo: Persistir produtos digitais. Arquivos prováveis: `packages/database/src/schema/products.ts`. Critério de aceite: slug unique, status e producer FK existem. Teste obrigatório: schema assertion. Comando para validar: `pnpm --filter @kiwifyclone/database test:unit -- --run products-schema`
-- [ ] T028 Criar tabela `product_modules` em `packages/database/src/schema/products.ts`
+- [X] T028 Criar tabela `product_modules` em `packages/database/src/schema/products.ts`
   - Objetivo: Persistir módulos ordenados. Arquivos prováveis: `packages/database/src/schema/products.ts`. Critério de aceite: FK produto e ordenação existem. Teste obrigatório: schema assertion. Comando para validar: `pnpm --filter @kiwifyclone/database test:unit -- --run product-modules-schema`
-- [ ] T029 Criar tabela `product_lessons` em `packages/database/src/schema/products.ts`
+- [X] T029 Criar tabela `product_lessons` em `packages/database/src/schema/products.ts`
   - Objetivo: Persistir aulas. Arquivos prováveis: `packages/database/src/schema/products.ts`. Critério de aceite: tipo de conteúdo e campos de texto/video existem. Teste obrigatório: schema assertion. Comando para validar: `pnpm --filter @kiwifyclone/database test:unit -- --run product-lessons-schema`
-- [ ] T030 Criar tabela `offers` em `packages/database/src/schema/offers.ts`
+- [X] T030 Criar tabela `offers` em `packages/database/src/schema/offers.ts`
   - Objetivo: Persistir ofertas compráveis. Arquivos prováveis: `packages/database/src/schema/offers.ts`. Critério de aceite: preço, status e métodos permitidos existem. Teste obrigatório: schema assertion. Comando para validar: `pnpm --filter @kiwifyclone/database test:unit -- --run offers-schema`
-- [ ] T031 Criar tabela `orders` em `packages/database/src/schema/orders.ts`
+- [X] T031 Criar tabela `orders` em `packages/database/src/schema/orders.ts`
   - Objetivo: Persistir lifecycle de pedido. Arquivos prováveis: `packages/database/src/schema/orders.ts`. Critério de aceite: status pending/paid/refused/canceled e totais existem. Teste obrigatório: schema assertion. Comando para validar: `pnpm --filter @kiwifyclone/database test:unit -- --run orders-schema`
-- [ ] T032 Criar tabela `order_items` em `packages/database/src/schema/orders.ts`
+- [X] T032 Criar tabela `order_items` em `packages/database/src/schema/orders.ts`
   - Objetivo: Persistir snapshot da oferta comprada. Arquivos prováveis: `packages/database/src/schema/orders.ts`. Critério de aceite: FK order/offer/product e preço snapshot existem. Teste obrigatório: schema assertion. Comando para validar: `pnpm --filter @kiwifyclone/database test:unit -- --run order-items-schema`
-- [ ] T033 Criar tabela `payments` em `packages/database/src/schema/payments.ts`
+- [X] T033 Criar tabela `payments` em `packages/database/src/schema/payments.ts`
   - Objetivo: Persistir pagamento seguro. Arquivos prováveis: `packages/database/src/schema/payments.ts`. Critério de aceite: status pending/approved/refused/canceled, método, valor e safe metadata existem sem campos de cartão sensíveis. Teste obrigatório: no-sensitive-fields assertion. Comando para validar: `pnpm --filter @kiwifyclone/database test:unit -- --run payments-schema`
-- [ ] T034 Criar tabela `payment_provider_customers` em `packages/database/src/schema/payments.ts`
+- [X] T034 Criar tabela `payment_provider_customers` em `packages/database/src/schema/payments.ts`
   - Objetivo: Mapear cliente interno para provider. Arquivos prováveis: `packages/database/src/schema/payments.ts`. Critério de aceite: unique por provider/customer externo. Teste obrigatório: schema assertion. Comando para validar: `pnpm --filter @kiwifyclone/database test:unit -- --run provider-customers-schema`
-- [ ] T035 Criar tabela `payment_provider_charges` em `packages/database/src/schema/payments.ts`
+- [X] T035 Criar tabela `payment_provider_charges` em `packages/database/src/schema/payments.ts`
   - Objetivo: Mapear cobrança externa segura. Arquivos prováveis: `packages/database/src/schema/payments.ts`. Critério de aceite: unique por provider/charge externo e campos Pix seguros. Teste obrigatório: schema assertion. Comando para validar: `pnpm --filter @kiwifyclone/database test:unit -- --run provider-charges-schema`
-- [ ] T036 Criar tabela `enrollments` em `packages/database/src/schema/enrollments.ts`
+- [X] T036 Criar tabela `enrollments` em `packages/database/src/schema/enrollments.ts`
   - Objetivo: Persistir acesso comprado. Arquivos prováveis: `packages/database/src/schema/enrollments.ts`. Critério de aceite: unique impede duplicidade por cliente/produto/pedido. Teste obrigatório: uniqueness integration. Comando para validar: `pnpm --filter @kiwifyclone/database test:integration -- --run enrollments-unique`
-- [ ] T037 Criar tabela `external_webhook_events` em `packages/database/src/schema/webhooks.ts`
+- [X] T037 Criar tabela `external_webhook_events` em `packages/database/src/schema/webhooks.ts`
   - Objetivo: Auditar e idempotentizar webhooks. Arquivos prováveis: `packages/database/src/schema/webhooks.ts`. Critério de aceite: unique provider/idempotencyKey e status de processamento existem. Teste obrigatório: duplicate event integration. Comando para validar: `pnpm --filter @kiwifyclone/database test:integration -- --run webhook-events-idempotency`
-- [ ] T038 Criar tabela `domain_events` em `packages/database/src/schema/events.ts`
+- [X] T038 Criar tabela `domain_events` em `packages/database/src/schema/events.ts`
   - Objetivo: Persistir eventos internos. Arquivos prováveis: `packages/database/src/schema/events.ts`. Critério de aceite: aggregate e payload seguro existem. Teste obrigatório: schema assertion. Comando para validar: `pnpm --filter @kiwifyclone/database test:unit -- --run domain-events-schema`
-- [ ] T039 Criar tabela `job_logs` em `packages/database/src/schema/jobs.ts`
+- [X] T039 Criar tabela `job_logs` em `packages/database/src/schema/jobs.ts`
   - Objetivo: Persistir logs de jobs e email fake. Arquivos prováveis: `packages/database/src/schema/jobs.ts`. Critério de aceite: fila, job, status, erro e summaries existem. Teste obrigatório: schema assertion. Comando para validar: `pnpm --filter @kiwifyclone/database test:unit -- --run job-logs-schema`
 
 ## FASE 4: Autenticação

@@ -1,1 +1,1 @@
-export const packageName = "@kiwifyclone/test-utils";
+export * from "./database.js";
