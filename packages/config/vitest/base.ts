@@ -2,7 +2,8 @@ const config = {
   test: {
     environment: "node",
     globals: false,
-    passWithNoTests: true
+    passWithNoTests: true,
+    exclude: ["**/node_modules/**", "**/.git/**", "**/dist/**", "**/.next/**"]
   }
 };
 
