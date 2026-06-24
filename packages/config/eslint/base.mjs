@@ -6,10 +6,15 @@ export default [
     ignores: [
       "node_modules/**",
       "dist/**",
+      "**/dist/**",
       "build/**",
+      "**/build/**",
       ".next/**",
+      "**/.next/**",
       "coverage/**",
+      "**/coverage/**",
       ".turbo/**",
+      "**/.turbo/**",
       "*.min.js"
     ]
   },

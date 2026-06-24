@@ -28,6 +28,7 @@ const requiredDocs = [
   "git-flow.md",
   "testing-strategy.md"
 ];
+const frontendApps = ["products", "checkout", "members", "admin"];
 
 describe("phase 1 monorepo foundation", () => {
   it("declares pnpm workspaces for apps and packages", () => {
@@ -105,5 +106,48 @@ describe("phase 1 monorepo foundation", () => {
     expect(compose).toContain("postgres:");
     expect(compose).toContain("redis:");
     expect(compose).toContain("healthcheck:");
+  });
+
+  it("defines Vercel config for every frontend without sensitive env values", () => {
+    for (const app of frontendApps) {
+      const config = JSON.parse(read(join("apps", app, "vercel.json"))) as {
+        buildCommand?: string;
+        installCommand?: string;
+        outputDirectory?: string;
+        env?: Record<string, string>;
+      };
+
+      expect(config.buildCommand).toBe(`pnpm --filter @kiwifyclone/${app} build`);
+      expect(config.installCommand).toBe("pnpm install --frozen-lockfile");
+      expect(config.outputDirectory).toBe("dist");
+      expect(JSON.stringify(config.env ?? {})).not.toMatch(/SECRET|TOKEN|ASAAS_API_KEY|DATABASE_URL|REDIS_URL/);
+    }
+  });
+
+  it("defines Dockerfiles for API and worker deploys", () => {
+    const apiDockerfile = read("apps/api/Dockerfile");
+    const workerDockerfile = read("apps/worker/Dockerfile");
+
+    expect(apiDockerfile).toContain("pnpm --filter @kiwifyclone/api build");
+    expect(apiDockerfile).toContain("EXPOSE 3001");
+    expect(apiDockerfile).toContain('CMD ["node", "dist/index.js"]');
+    expect(workerDockerfile).toContain("pnpm --filter @kiwifyclone/worker build");
+    expect(workerDockerfile).not.toContain("EXPOSE");
+    expect(workerDockerfile).toContain('CMD ["node", "dist/index.js"]');
+  });
+
+  it("documents Vercel and Dokploy deploy boundaries", () => {
+    const deployDoc = read("docs/deploy-vercel-dokploy.md");
+
+    expect(deployDoc).toContain("apps/products");
+    expect(deployDoc).toContain("apps/checkout");
+    expect(deployDoc).toContain("apps/members");
+    expect(deployDoc).toContain("apps/admin");
+    expect(deployDoc).toContain("apps/api");
+    expect(deployDoc).toContain("apps/worker");
+    expect(deployDoc).toContain("staging");
+    expect(deployDoc).toContain("production");
+    expect(deployDoc).toContain("DATABASE_URL");
+    expect(deployDoc).toContain("REDIS_URL");
   });
 });
