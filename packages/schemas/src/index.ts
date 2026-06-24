@@ -1,1 +1,1 @@
-export const packageName = "@kiwifyclone/schemas";
+export * from "./auth.js";

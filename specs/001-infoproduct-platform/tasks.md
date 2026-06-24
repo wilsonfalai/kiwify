@@ -99,17 +99,17 @@
 
 ## FASE 4: Autenticação
 
-- [ ] T040 Configurar Better Auth em `packages/auth/src/config.ts`
+- [X] T040 Configurar Better Auth em `packages/auth/src/config.ts`
   - Objetivo: Centralizar configuração de auth. Arquivos prováveis: `packages/auth/src/config.ts`, `packages/auth/src/index.ts`. Critério de aceite: config usa env e exporta tipos. Teste obrigatório: auth config unit. Comando para validar: `pnpm --filter @kiwifyclone/auth test:unit -- --run auth-config`
-- [ ] T041 Integrar auth com API em `apps/api/src/auth`
+- [X] T041 Integrar auth com API em `apps/api/src/auth`
   - Objetivo: Criar `AuthModule` e guards. Arquivos prováveis: `apps/api/src/auth/auth.module.ts`, `apps/api/src/auth/session.guard.ts`. Critério de aceite: endpoints protegidos exigem sessão. Teste obrigatório: Supertest auth guard. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run auth`
-- [ ] T042 Criar helpers de sessão nos frontends em `packages/auth/src/frontend.ts`
+- [X] T042 Criar helpers de sessão nos frontends em `packages/auth/src/frontend.ts`
   - Objetivo: Compartilhar leitura de sessão. Arquivos prováveis: `packages/auth/src/frontend.ts`, `apps/*/src/lib/session.ts`. Critério de aceite: frontends usam helper comum. Teste obrigatório: helper unit. Comando para validar: `pnpm --filter @kiwifyclone/auth test:unit -- --run session-helper`
-- [ ] T043 Criar proteção de rotas em `apps/*/middleware.ts`
+- [X] T043 Criar proteção de rotas em `apps/*/middleware.ts`
   - Objetivo: Bloquear membros/admin/checkout quando necessário. Arquivos prováveis: `apps/members/middleware.ts`, `apps/admin/middleware.ts`, `apps/checkout/middleware.ts`. Critério de aceite: rotas privadas redirecionam ou negam acesso. Teste obrigatório: middleware unit/e2e. Comando para validar: `pnpm test:unit -- --run route-protection`
-- [ ] T044 Criar papéis buyer/producer/platform_admin em `packages/auth/src/roles.ts`
+- [X] T044 Criar papéis buyer/producer/platform_admin em `packages/auth/src/roles.ts`
   - Objetivo: Modelar roles e permissões. Arquivos prováveis: `packages/auth/src/roles.ts`, `packages/schemas/src/auth.ts`. Critério de aceite: permissões distinguem comprador, produtor e admin. Teste obrigatório: role matrix unit. Comando para validar: `pnpm --filter @kiwifyclone/auth test:unit -- --run roles`
-- [ ] T045 Criar testes de autenticação e autorização em `apps/api/test/authz.e2e-spec.ts`
+- [X] T045 Criar testes de autenticação e autorização em `apps/api/test/authz.e2e-spec.ts`
   - Objetivo: Validar acesso por papel. Arquivos prováveis: `apps/api/test/authz.e2e-spec.ts`, `packages/test-utils/src/auth.ts`. Critério de aceite: produtor, comprador e platform_admin têm acessos corretos. Teste obrigatório: authz integration. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run authz`
 
 ## FASE 5: Produtos e ofertas

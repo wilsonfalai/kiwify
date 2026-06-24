@@ -1,9 +1,14 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
+import { handleAuthRequest } from "./auth/auth.controller.js";
 import { healthResponse } from "./health/health.controller.js";
 
 export const appName = "api";
 
 export function handleApiRequest(request: IncomingMessage, response: ServerResponse) {
+  if (handleAuthRequest(request, response)) {
+    return;
+  }
+
   if (request.url === "/health" && request.method === "GET") {
     const body = JSON.stringify(healthResponse());
 

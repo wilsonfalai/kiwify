@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@eslint/js": "latest",
+    "@kiwifyclone/auth": "workspace:*",
     "@types/node": "latest",
     "@types/supertest": "^7.2.0",
     "eslint": "latest",

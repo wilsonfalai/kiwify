@@ -14,5 +14,8 @@
     "test:unit": "vitest run --passWithNoTests",
     "test:integration": "vitest run --passWithNoTests",
     "test:e2e": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@kiwifyclone/auth": "workspace:*"
   }
 }
