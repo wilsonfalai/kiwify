@@ -39,17 +39,17 @@
 
 ## FASE 2: Deploy base
 
-- [ ] T013 [P] Criar configuração Vercel dos frontends em `apps/*/vercel.json`
+- [X] T013 [P] Criar configuração Vercel dos frontends em `apps/*/vercel.json`
   - Objetivo: Configurar projects Vercel para `products`, `checkout`, `members`, `admin`. Arquivos prováveis: `apps/products/vercel.json`, `apps/checkout/vercel.json`, `apps/members/vercel.json`, `apps/admin/vercel.json`, `docs/deploy-vercel-dokploy.md`. Critério de aceite: cada app declara build/root sem secrets públicas indevidas. Teste obrigatório: validação de config Vercel. Comando para validar: `pnpm test:unit -- --run vercel-config`
-- [ ] T014 Criar Dockerfile da API em `apps/api/Dockerfile`
+- [X] T014 Criar Dockerfile da API em `apps/api/Dockerfile`
   - Objetivo: Preparar build Dokploy para API. Arquivos prováveis: `apps/api/Dockerfile`, `.dockerignore`, `docs/deploy-vercel-dokploy.md`. Critério de aceite: Dockerfile instala dependências e inicia API. Teste obrigatório: build de imagem API. Comando para validar: `docker build -f apps/api/Dockerfile .`
-- [ ] T015 Criar Dockerfile do worker em `apps/worker/Dockerfile`
+- [X] T015 Criar Dockerfile do worker em `apps/worker/Dockerfile`
   - Objetivo: Preparar build Dokploy para worker separado. Arquivos prováveis: `apps/worker/Dockerfile`, `.dockerignore`, `docs/deploy-vercel-dokploy.md`. Critério de aceite: Dockerfile inicia worker sem endpoint público obrigatório. Teste obrigatório: build de imagem worker. Comando para validar: `docker build -f apps/worker/Dockerfile .`
-- [ ] T016 Criar healthcheck da API em `apps/api/src/health`
-  - Objetivo: Expor endpoint HTTP de saúde. Arquivos prováveis: `apps/api/src/health/health.module.ts`, `apps/api/src/health/health.controller.ts`, `apps/api/test/health.e2e-spec.ts`. Critério de aceite: `GET /health` retorna status ok. Teste obrigatório: integração Supertest. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run health`
-- [ ] T017 Atualizar documentação de deploy em `docs/deploy-vercel-dokploy.md`
+- [X] T016 Criar healthcheck da API em `apps/api/src/health`
+  - Objetivo: Expor endpoint HTTP de saúde. Arquivos prováveis: `apps/api/src/health/health.module.ts`, `apps/api/src/health/health.controller.ts`, `apps/api/test/health.spec.ts`. Critério de aceite: `GET /health` retorna status ok. Teste obrigatório: integração Supertest. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration`
+- [X] T017 Atualizar documentação de deploy em `docs/deploy-vercel-dokploy.md`
   - Objetivo: Documentar Vercel + Dokploy, build paths e ambientes. Arquivos prováveis: `docs/deploy-vercel-dokploy.md`. Critério de aceite: cobre GitHub, Vercel por frontend, Dokploy API/worker, PostgreSQL, Redis, staging e production. Teste obrigatório: docs deploy completeness. Comando para validar: `pnpm test:unit -- --run docs-deploy`
-- [ ] T018 Validar build independente de cada app via `turbo.json`
+- [X] T018 Validar build independente de cada app via `turbo.json`
   - Objetivo: Garantir build isolado dos seis apps. Arquivos prováveis: `turbo.json`, `apps/*/package.json`. Critério de aceite: cada app tem script build funcional. Teste obrigatório: build filtrado por app. Comando para validar: `pnpm --filter ./apps/products build && pnpm --filter ./apps/checkout build && pnpm --filter ./apps/members build && pnpm --filter ./apps/admin build && pnpm --filter ./apps/api build && pnpm --filter ./apps/worker build`
 
 ## FASE 3: Banco de dados e Drizzle

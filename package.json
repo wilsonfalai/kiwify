@@ -18,10 +18,12 @@
   "devDependencies": {
     "@eslint/js": "latest",
     "@types/node": "latest",
+    "@types/supertest": "^7.2.0",
     "eslint": "latest",
+    "supertest": "^7.2.2",
+    "turbo": "latest",
     "typescript": "latest",
     "typescript-eslint": "latest",
-    "turbo": "latest",
     "vitest": "latest"
   }
 }
