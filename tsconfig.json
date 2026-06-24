@@ -1,0 +1,21 @@
+{
+  "extends": "./packages/config/tsconfig/base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["tests/**/*.ts"],
+  "references": [
+    { "path": "./apps/members" },
+    { "path": "./apps/products" },
+    { "path": "./apps/admin" },
+    { "path": "./apps/checkout" },
+    { "path": "./apps/api" },
+    { "path": "./apps/worker" },
+    { "path": "./packages/config" },
+    { "path": "./packages/database" },
+    { "path": "./packages/auth" },
+    { "path": "./packages/schemas" },
+    { "path": "./packages/ui" },
+    { "path": "./packages/test-utils" }
+  ]
+}
