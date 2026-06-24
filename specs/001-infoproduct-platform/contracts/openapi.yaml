@@ -1,0 +1,648 @@
+openapi: 3.1.0
+info:
+  title: KiwifyClone MVP API
+  version: 0.1.0
+  description: REST contract for the infoproduct MVP frontends and Asaas webhook intake.
+servers:
+  - url: https://api.example.com
+    description: Production API
+  - url: https://staging-api.example.com
+    description: Staging API
+  - url: http://localhost:3001
+    description: Local API
+tags:
+  - name: Auth
+  - name: Products
+  - name: Offers
+  - name: Checkout
+  - name: Members
+  - name: Admin
+  - name: Webhooks
+  - name: Health
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Healthcheck for API service
+      responses:
+        "200":
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+  /auth/session:
+    get:
+      tags: [Auth]
+      summary: Return current authenticated session
+      responses:
+        "200":
+          description: Current session or anonymous state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionResponse"
+  /products/{slug}:
+    get:
+      tags: [Products]
+      summary: Get public active product and active offers by slug
+      parameters:
+        - $ref: "#/components/parameters/ProductSlug"
+      responses:
+        "200":
+          description: Public product with active offers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicProduct"
+        "404":
+          description: Product not found or not active
+  /producer/products:
+    post:
+      tags: [Products]
+      summary: Create producer product
+      security:
+        - sessionCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProductRequest"
+      responses:
+        "201":
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+    get:
+      tags: [Products]
+      summary: List products for current producer
+      security:
+        - sessionCookie: []
+      responses:
+        "200":
+          description: Producer products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+  /producer/products/{productId}/modules:
+    post:
+      tags: [Products]
+      summary: Create module for product
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: "#/components/parameters/ProductId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateModuleRequest"
+      responses:
+        "201":
+          description: Module created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductModule"
+  /producer/modules/{moduleId}/lessons:
+    post:
+      tags: [Products]
+      summary: Create lesson for module
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: "#/components/parameters/ModuleId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateLessonRequest"
+      responses:
+        "201":
+          description: Lesson created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductLesson"
+  /producer/products/{productId}/offers:
+    post:
+      tags: [Offers]
+      summary: Create offer for product
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: "#/components/parameters/ProductId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOfferRequest"
+      responses:
+        "201":
+          description: Offer created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Offer"
+  /checkout/orders:
+    post:
+      tags: [Checkout]
+      summary: Create order and initiate payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCheckoutOrderRequest"
+      responses:
+        "201":
+          description: Order and payment created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutOrderResponse"
+        "409":
+          description: Offer inactive or payment method not allowed
+  /checkout/orders/{orderId}:
+    get:
+      tags: [Checkout]
+      summary: Get checkout order status
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+      responses:
+        "200":
+          description: Order status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderStatusResponse"
+  /members/products:
+    get:
+      tags: [Members]
+      summary: List purchased products for current buyer
+      security:
+        - sessionCookie: []
+      responses:
+        "200":
+          description: Purchased products and access status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/MemberProduct"
+  /members/lessons/{lessonId}:
+    get:
+      tags: [Members]
+      summary: Get lesson content if buyer has active access
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: "#/components/parameters/LessonId"
+      responses:
+        "200":
+          description: Lesson content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemberLesson"
+        "403":
+          description: Buyer has no active enrollment for this lesson
+  /admin/users:
+    get:
+      tags: [Admin]
+      summary: Platform admin lists users
+      security:
+        - sessionCookie: []
+      responses:
+        "200":
+          description: Users list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminListResponse"
+  /admin/products:
+    get:
+      tags: [Admin]
+      summary: Platform admin lists products
+      security:
+        - sessionCookie: []
+      responses:
+        "200":
+          description: Products list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminListResponse"
+  /admin/orders:
+    get:
+      tags: [Admin]
+      summary: Platform admin lists orders
+      security:
+        - sessionCookie: []
+      responses:
+        "200":
+          description: Orders list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminListResponse"
+  /admin/payments:
+    get:
+      tags: [Admin]
+      summary: Platform admin lists payments
+      security:
+        - sessionCookie: []
+      responses:
+        "200":
+          description: Payments list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminListResponse"
+  /admin/webhook-events:
+    get:
+      tags: [Admin]
+      summary: Platform admin lists external webhook events
+      security:
+        - sessionCookie: []
+      responses:
+        "200":
+          description: Webhook events list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminListResponse"
+  /webhooks/asaas:
+    post:
+      tags: [Webhooks]
+      summary: Receive Asaas webhook
+      parameters:
+        - name: x-asaas-webhook-token
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AsaasWebhookPayload"
+      responses:
+        "202":
+          description: Event accepted for asynchronous processing
+        "401":
+          description: Webhook security validation failed
+        "409":
+          description: Duplicate event accepted as idempotent no-op
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: session
+  parameters:
+    ProductSlug:
+      name: slug
+      in: path
+      required: true
+      schema:
+        type: string
+    ProductId:
+      name: productId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ModuleId:
+      name: moduleId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    LessonId:
+      name: lessonId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    OrderId:
+      name: orderId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [ok]
+    SessionResponse:
+      type: object
+      properties:
+        authenticated:
+          type: boolean
+        user:
+          $ref: "#/components/schemas/User"
+    User:
+      type: object
+      required: [id, name, email, role]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum: [buyer, producer, platform_admin]
+    Product:
+      type: object
+      required: [id, title, slug, description, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [draft, active, inactive]
+    PublicProduct:
+      allOf:
+        - $ref: "#/components/schemas/Product"
+        - type: object
+          required: [offers]
+          properties:
+            offers:
+              type: array
+              items:
+                $ref: "#/components/schemas/Offer"
+    ProductModule:
+      type: object
+      required: [id, productId, title, position]
+      properties:
+        id:
+          type: string
+          format: uuid
+        productId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        position:
+          type: integer
+    ProductLesson:
+      type: object
+      required: [id, moduleId, title, contentType, position]
+      properties:
+        id:
+          type: string
+          format: uuid
+        moduleId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        contentType:
+          type: string
+          enum: [text, video_url]
+        textContent:
+          type: string
+          nullable: true
+        videoUrl:
+          type: string
+          nullable: true
+        position:
+          type: integer
+    Offer:
+      type: object
+      required: [id, productId, name, priceCents, currency, status, allowedPaymentMethods]
+      properties:
+        id:
+          type: string
+          format: uuid
+        productId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        priceCents:
+          type: integer
+        currency:
+          type: string
+          enum: [BRL]
+        status:
+          type: string
+          enum: [active, inactive]
+        allowedPaymentMethods:
+          type: array
+          items:
+            type: string
+            enum: [pix, credit_card]
+    CreateProductRequest:
+      type: object
+      required: [title, slug, description, status]
+      properties:
+        title:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [draft, active, inactive]
+    CreateModuleRequest:
+      type: object
+      required: [title, position]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        position:
+          type: integer
+    CreateLessonRequest:
+      type: object
+      required: [title, contentType, position]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        contentType:
+          type: string
+          enum: [text, video_url]
+        textContent:
+          type: string
+          nullable: true
+        videoUrl:
+          type: string
+          nullable: true
+        position:
+          type: integer
+    CreateOfferRequest:
+      type: object
+      required: [name, priceCents, status, allowedPaymentMethods]
+      properties:
+        name:
+          type: string
+        priceCents:
+          type: integer
+        status:
+          type: string
+          enum: [active, inactive]
+        allowedPaymentMethods:
+          type: array
+          items:
+            type: string
+            enum: [pix, credit_card]
+    CreateCheckoutOrderRequest:
+      type: object
+      required: [offerId, customer, paymentMethod]
+      properties:
+        offerId:
+          type: string
+          format: uuid
+        paymentMethod:
+          type: string
+          enum: [pix, credit_card]
+        customer:
+          type: object
+          required: [name, email]
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+              format: email
+            document:
+              type: string
+              nullable: true
+            phone:
+              type: string
+              nullable: true
+        card:
+          type: object
+          description: Present only for credit_card. Must not be persisted by the platform.
+          additionalProperties: true
+    CheckoutOrderResponse:
+      type: object
+      required: [orderId, paymentId, orderStatus, paymentStatus, paymentMethod]
+      properties:
+        orderId:
+          type: string
+          format: uuid
+        paymentId:
+          type: string
+          format: uuid
+        orderStatus:
+          type: string
+          enum: [pending, paid, refused, canceled]
+        paymentStatus:
+          type: string
+          enum: [pending, approved, refused, canceled]
+        paymentMethod:
+          type: string
+          enum: [pix, credit_card]
+        pix:
+          type: object
+          nullable: true
+          properties:
+            qrCode:
+              type: string
+              nullable: true
+            payload:
+              type: string
+              nullable: true
+    OrderStatusResponse:
+      type: object
+      required: [orderId, orderStatus, paymentStatus]
+      properties:
+        orderId:
+          type: string
+          format: uuid
+        orderStatus:
+          type: string
+          enum: [pending, paid, refused, canceled]
+        paymentStatus:
+          type: string
+          enum: [pending, approved, refused, canceled]
+    MemberProduct:
+      type: object
+      required: [productId, title, enrollmentStatus]
+      properties:
+        productId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        enrollmentStatus:
+          type: string
+          enum: [active, pending, revoked]
+    MemberLesson:
+      allOf:
+        - $ref: "#/components/schemas/ProductLesson"
+    AdminListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    AsaasWebhookPayload:
+      type: object
+      required: [event, payment]
+      properties:
+        event:
+          type: string
+        payment:
+          type: object
+          additionalProperties: true
