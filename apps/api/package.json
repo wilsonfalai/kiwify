@@ -1,0 +1,16 @@
+{
+  "name": "@kiwifyclone/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch dist/index.js",
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:unit": "vitest run --passWithNoTests",
+    "test:integration": "vitest run --passWithNoTests",
+    "test:e2e": "vitest run --passWithNoTests"
+  }
+}

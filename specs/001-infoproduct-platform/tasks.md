@@ -12,29 +12,29 @@
 
 ## FASE 1: Fundação do monorepo
 
-- [ ] T001 Criar pnpm workspace em `pnpm-workspace.yaml`
+- [X] T001 Criar pnpm workspace em `pnpm-workspace.yaml`
   - Objetivo: Declarar apps e packages do monorepo. Arquivos prováveis: `pnpm-workspace.yaml`, `package.json`. Critério de aceite: workspaces incluem `apps/*` e `packages/*`. Teste obrigatório: workspace discovery. Comando para validar: `pnpm -r list --depth 0`
-- [ ] T002 Criar Turborepo em `turbo.json`
+- [X] T002 Criar Turborepo em `turbo.json`
   - Objetivo: Orquestrar build, lint, typecheck e testes. Arquivos prováveis: `turbo.json`, `package.json`. Critério de aceite: pipelines raiz cobrem comandos obrigatórios. Teste obrigatório: dry run de pipeline. Comando para validar: `pnpm turbo run lint --dry=json`
-- [ ] T003 Criar estrutura apps em `apps/`
+- [X] T003 Criar estrutura apps em `apps/`
   - Objetivo: Criar `members`, `products`, `admin`, `checkout`, `api`, `worker`. Arquivos prováveis: `apps/*/package.json`, `apps/*/src` ou `apps/*/app`. Critério de aceite: todos os apps existem e são workspaces. Teste obrigatório: listagem de workspaces. Comando para validar: `pnpm -r list --depth 0`
-- [ ] T004 Criar estrutura packages em `packages/`
+- [X] T004 Criar estrutura packages em `packages/`
   - Objetivo: Criar `config`, `database`, `auth`, `schemas`, `ui`, `test-utils`. Arquivos prováveis: `packages/*/package.json`, `packages/*/src/index.ts`. Critério de aceite: todos os packages existem e exportam entrypoint. Teste obrigatório: import smoke tests. Comando para validar: `pnpm typecheck`
-- [ ] T005 Configurar TypeScript compartilhado em `packages/config/tsconfig`
+- [X] T005 Configurar TypeScript compartilhado em `packages/config/tsconfig`
   - Objetivo: Centralizar tsconfig base para apps e packages. Arquivos prováveis: `packages/config/tsconfig/base.json`, `tsconfig.json`, `apps/*/tsconfig.json`, `packages/*/tsconfig.json`. Critério de aceite: todos os workspaces herdam config comum. Teste obrigatório: typecheck raiz. Comando para validar: `pnpm typecheck`
-- [ ] T006 Configurar ESLint compartilhado em `packages/config/eslint`
+- [X] T006 Configurar ESLint compartilhado em `packages/config/eslint`
   - Objetivo: Padronizar lint para Next.js, NestJS e packages. Arquivos prováveis: `packages/config/eslint/*`, `eslint.config.mjs`, `apps/*/eslint.config.mjs`. Critério de aceite: lint roda em todo monorepo. Teste obrigatório: lint raiz. Comando para validar: `pnpm lint`
-- [ ] T007 Configurar Vitest em `packages/config/vitest`
+- [X] T007 Configurar Vitest em `packages/config/vitest`
   - Objetivo: Criar preset comum para unit tests. Arquivos prováveis: `packages/config/vitest/base.ts`, `vitest.config.ts`, `packages/*/vitest.config.ts`. Critério de aceite: teste unitário smoke roda. Teste obrigatório: Vitest smoke. Comando para validar: `pnpm test:unit`
-- [ ] T008 Configurar scripts raiz em `package.json`
-  - Objetivo: Criar scripts `dev`, `build`, `lint`, `typecheck`, `test`, `test:unit`, `test:integration`, `test:e2e`, `ci`. Arquivos prováveis: `package.json`, `turbo.json`. Critério de aceite: scripts existem e apontam para turbo/pnpm. Teste obrigatório: execução CI local. Comando para validar: `pnpm ci`
-- [ ] T009 Criar docker-compose local com PostgreSQL e Redis em `docker-compose.yml`
+- [X] T008 Configurar scripts raiz em `package.json`
+  - Objetivo: Criar scripts `dev`, `build`, `lint`, `typecheck`, `test`, `test:unit`, `test:integration`, `test:e2e`, `ci`. Arquivos prováveis: `package.json`, `turbo.json`. Critério de aceite: scripts existem e apontam para turbo/pnpm. Teste obrigatório: execução CI local. Comando para validar: `pnpm run ci`
+- [X] T009 Criar docker-compose local com PostgreSQL e Redis em `docker-compose.yml`
   - Objetivo: Subir dependências locais. Arquivos prováveis: `docker-compose.yml`, `.env.example`. Critério de aceite: serviços `postgres` e `redis` têm portas e healthchecks. Teste obrigatório: healthcheck dos containers. Comando para validar: `docker compose config`
-- [ ] T010 Criar `.env.example`
+- [X] T010 Criar `.env.example`
   - Objetivo: Documentar variáveis obrigatórias. Arquivos prováveis: `.env.example`. Critério de aceite: inclui `DATABASE_URL`, `REDIS_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `ASAAS_API_KEY`, `ASAAS_BASE_URL`, `ASAAS_ENVIRONMENT`, `ASAAS_WEBHOOK_TOKEN`, `NEXT_PUBLIC_API_URL`. Teste obrigatório: script de validação de env example. Comando para validar: `pnpm test:unit -- --run env-example`
-- [ ] T011 Criar GitHub Actions para CI em `.github/workflows/ci.yml`
+- [X] T011 Criar GitHub Actions para CI em `.github/workflows/ci.yml`
   - Objetivo: Validar install, lint, typecheck e testes. Arquivos prováveis: `.github/workflows/ci.yml`. Critério de aceite: workflow executa `pnpm install`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm test:integration`, `pnpm test:e2e`. Teste obrigatório: action lint/static check. Comando para validar: `pnpm test:unit -- --run ci-workflow`
-- [ ] T012 Criar documentação inicial em `docs/`
+- [X] T012 Criar documentação inicial em `docs/`
   - Objetivo: Criar docs obrigatórios do MVP. Arquivos prováveis: `docs/product-vision.md`, `docs/architecture.md`, `docs/database-model.md`, `docs/payment-asaas-flow.md`, `docs/deploy-vercel-dokploy.md`, `docs/git-flow.md`, `docs/testing-strategy.md`. Critério de aceite: todos os arquivos existem com seções mínimas. Teste obrigatório: docs completeness test. Comando para validar: `pnpm test:unit -- --run docs-required`
 
 ## FASE 2: Deploy base
@@ -301,7 +301,7 @@
 - [ ] T126 Revisar documentação em `docs/`
   - Objetivo: Garantir docs obrigatórios completos. Arquivos prováveis: `docs/*.md`. Critério de aceite: visão, arquitetura, dados, Asaas, deploy, Git Flow e testes cobertos. Teste obrigatório: docs completeness. Comando para validar: `pnpm test:unit -- --run docs-required`
 - [ ] T127 Revisar scripts em `package.json`
-  - Objetivo: Garantir scripts raiz e por workspace. Arquivos prováveis: `package.json`, `apps/*/package.json`, `packages/*/package.json`. Critério de aceite: scripts obrigatórios executam pelo turbo. Teste obrigatório: scripts validation. Comando para validar: `pnpm ci`
+  - Objetivo: Garantir scripts raiz e por workspace. Arquivos prováveis: `package.json`, `apps/*/package.json`, `packages/*/package.json`. Critério de aceite: scripts obrigatórios executam pelo turbo. Teste obrigatório: scripts validation. Comando para validar: `pnpm run ci`
 - [ ] T128 Revisar CI em `.github/workflows/ci.yml`
   - Objetivo: Garantir gates antes de merge. Arquivos prováveis: `.github/workflows/ci.yml`. Critério de aceite: install, lint, typecheck, tests e builds opcionais configurados. Teste obrigatório: CI workflow unit. Comando para validar: `pnpm test:unit -- --run ci-workflow`
 - [ ] T129 Revisar Dockerfiles em `apps/api/Dockerfile` e `apps/worker/Dockerfile`
@@ -314,8 +314,8 @@
   - Objetivo: Preparar release MVP. Arquivos prováveis: `docs/production-checklist.md`. Critério de aceite: inclui env, CI, migrations, deploy, webhook, rollback e smoke tests. Teste obrigatório: checklist docs validation. Comando para validar: `pnpm test:unit -- --run production-checklist`
 - [ ] T133 Criar README com passo a passo local em `README.md`
   - Objetivo: Documentar setup local. Arquivos prováveis: `README.md`. Critério de aceite: cobre pnpm, docker compose, env, migrations, dev, testes. Teste obrigatório: README validation. Comando para validar: `pnpm test:unit -- --run readme`
-- [ ] T134 Garantir `pnpm ci` passando no monorepo em `package.json`
-  - Objetivo: Validar comando final de CI local. Arquivos prováveis: `package.json`, `turbo.json`. Critério de aceite: `pnpm ci` roda lint, typecheck, unit, integration e e2e. Teste obrigatório: CI local completo. Comando para validar: `pnpm ci`
+- [ ] T134 Garantir `pnpm run ci` passando no monorepo em `package.json`
+  - Objetivo: Validar comando final de CI local. Arquivos prováveis: `package.json`, `turbo.json`. Critério de aceite: `pnpm run ci` roda lint, typecheck, unit, integration e e2e. Teste obrigatório: CI local completo. Comando para validar: `pnpm run ci`
 - [ ] T135 Garantir que nenhuma task crítica fique sem teste em `specs/001-infoproduct-platform/tasks.md`
   - Objetivo: Auditar a própria lista de tasks. Arquivos prováveis: `specs/001-infoproduct-platform/tasks.md`, `packages/test-utils/src/task-audit.ts`. Critério de aceite: toda task possui Teste obrigatório e Comando para validar. Teste obrigatório: task audit. Comando para validar: `pnpm test:unit -- --run task-audit`
 
@@ -376,7 +376,7 @@ Task: "T121 checkout card E2E"
 
 ## Implementation Strategy
 
-1. Complete FASE 1 and validate `pnpm ci` scaffolding.
+1. Complete FASE 1 and validate `pnpm run ci` scaffolding.
 2. Complete database/auth/product foundations before checkout.
 3. Implement Asaas provider abstraction and fake provider before checkout UI.
 4. Implement webhook intake and worker idempotency before treating payment approval as complete.
