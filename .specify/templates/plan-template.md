@@ -17,21 +17,32 @@
   the iteration process.
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
+**Language/Version**: TypeScript with current stable framework versions or NEEDS CLARIFICATION
+**Primary Dependencies**: pnpm workspaces, Turborepo, Next.js App Router, NestJS, Tailwind, shadcn/ui, Zod, React Hook Form, TanStack Table, Better Auth, Drizzle ORM, BullMQ, Asaas or NEEDS CLARIFICATION
+**Storage**: PostgreSQL with Drizzle ORM; Redis for queues/events or N/A
+**Testing**: ESLint, typecheck, Vitest, Supertest for API integration, Playwright for E2E
+**Target Platform**: Web frontends on Vercel plus Node.js API/worker services on Dokploy or NEEDS CLARIFICATION
+**Project Type**: pnpm/Turborepo monorepo with required apps under `apps/`
 **Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Constraints**: Original simplified Kiwify/Hotmart-inspired MVP, Asaas payment via PaymentProvider/AsaasPaymentProvider, no copied brand/layout/text/code, automated tests required for completion, CI required before merge, avoid overengineering or NEEDS CLARIFICATION
 **Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- Original MVP: feature avoids copied brand/layout/text/code and limits scope to MVP value.
+- Spec Kit traceability: spec, plan, data model/contracts, and tasks remain aligned.
+- Monorepo fit: affected code belongs under required `apps/*` or justified shared packages.
+- Stack compliance: uses mandated current stable technologies unless an exception is documented.
+- Validation boundaries: DTOs/schemas validate inputs and services stay decoupled.
+- Payment integration: Asaas is accessed only through `PaymentProvider`/`AsaasPaymentProvider`; Pix and credit card scope is explicit; boleto is future-only unless fully implemented and tested.
+- Payment security: no sensitive card data is persisted or logged; webhook authenticity and idempotency are planned.
+- Async webhooks: Asaas webhooks are received by `apps/api`, queued through Redis/BullMQ, and processed by `apps/worker`.
+- Deployment/environments: GitHub, Vercel frontends, Dokploy API/worker, and `local`/`staging`/`production` envs are covered.
+- Required configuration/docs: `.env.example` and `/docs` updates are included when affected.
+- Automated tests: ESLint, typecheck, Vitest, Supertest, and Playwright tasks cover the delivered behavior.
+- Git Flow/CI: work is planned for feature branch PR with required CI before merge.
 
 ## Project Structure
 
@@ -56,39 +67,19 @@ specs/[###-feature]/
 -->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
+apps/
+├── members/            # Next.js members area
+├── products/           # Next.js public products/offers
+├── admin/              # Next.js platform administration
+├── checkout/           # Next.js checkout
+├── api/                # NestJS main API
+└── worker/             # NestJS queues/events/automations
+
+packages/
+└── [shared-package]/    # Only when immediately reused by 2+ apps
 
 tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+└── e2e/                # Playwright cross-app journeys when not colocated
 ```
 
 **Structure Decision**: [Document the selected structure and reference the real

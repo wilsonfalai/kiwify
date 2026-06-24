@@ -128,7 +128,21 @@ The tasks.md should be immediately executable - each task must be specific enoug
 
 **CRITICAL**: Tasks MUST be organized by user story to enable independent implementation and testing.
 
-**Tests are OPTIONAL**: Only generate test tasks if explicitly requested in the feature specification or if user requests TDD approach.
+**Tests are REQUIRED**: Generate automated test tasks for every user story and for
+foundational behavior where applicable. No task or user story may be considered
+complete unless ESLint, Vitest, Supertest, Playwright, or another explicitly
+planned automated check validates the delivered behavior.
+
+**Payment and operations tasks are REQUIRED when in scope**: If a feature touches
+checkout, orders, enrollment, access, webhooks, deploy, environment variables, or
+operational docs, generate explicit tasks for:
+- Asaas integration through `PaymentProvider` and `AsaasPaymentProvider`
+- Pix and credit card support, with boleto only as future scope unless implemented
+- Asaas webhook validation, audit persistence, async worker processing, and idempotency
+- Payment security: no sensitive card data persisted or logged
+- `.env.example` updates for required PostgreSQL, Redis, Better Auth, Asaas, and public API variables
+- `/docs` updates for product vision, architecture, data model, Asaas payment flow, Vercel/Dokploy deploy flow, technical decisions, and testing strategy as applicable
+- Deploy separation for Vercel frontends and Dokploy `apps/api`/`apps/worker`
 
 ### Checklist Format (REQUIRED)
 
@@ -155,8 +169,8 @@ Every task MUST strictly follow this format:
 
 - ✅ CORRECT: `- [ ] T001 Create project structure per implementation plan`
 - ✅ CORRECT: `- [ ] T005 [P] Implement authentication middleware in src/middleware/auth.py`
-- ✅ CORRECT: `- [ ] T012 [P] [US1] Create User model in src/models/user.py`
-- ✅ CORRECT: `- [ ] T014 [US1] Implement UserService in src/services/user_service.py`
+- ✅ CORRECT: `- [ ] T012 [P] [US1] Create User schema/model in apps/api/src/users/user.schema.ts`
+- ✅ CORRECT: `- [ ] T014 [US1] Implement UserService in apps/api/src/users/user.service.ts`
 - ❌ WRONG: `- [ ] Create User model` (missing ID and Story label)
 - ❌ WRONG: `T001 [US1] Create model` (missing checkbox)
 - ❌ WRONG: `- [ ] [US1] Create User model` (missing Task ID)
@@ -170,12 +184,12 @@ Every task MUST strictly follow this format:
      - Models needed for that story
      - Services needed for that story
      - Interfaces/UI needed for that story
-     - If tests requested: Tests specific to that story
+     - Automated tests specific to that story
    - Mark story dependencies (most stories should be independent)
 
 2. **From Contracts**:
    - Map each interface contract → to the user story it serves
-   - If tests requested: Each interface contract → contract test task [P] before implementation in that story's phase
+   - Each interface contract → automated contract/integration test task [P] before implementation in that story's phase
 
 3. **From Data Model**:
    - Map each entity to the user story(ies) that need it
@@ -192,6 +206,6 @@ Every task MUST strictly follow this format:
 - **Phase 1**: Setup (project initialization)
 - **Phase 2**: Foundational (blocking prerequisites - MUST complete before user stories)
 - **Phase 3+**: User Stories in priority order (P1, P2, P3...)
-  - Within each story: Tests (if requested) → Models → Services → Endpoints → Integration
+  - Within each story: Tests → Models → Services → Endpoints → Integration
   - Each phase should be a complete, independently testable increment
 - **Final Phase**: Polish & Cross-Cutting Concerns

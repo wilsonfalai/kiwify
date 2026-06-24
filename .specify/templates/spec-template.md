@@ -89,11 +89,27 @@
 - **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
 - **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
 - **FR-005**: System MUST [behavior, e.g., "log all security events"]
+- **FR-006**: Feature MUST avoid copying third-party brand, layout, proprietary text, or code
+- **FR-007**: Feature MUST define automated validation required for completion
+- **FR-008**: Payment features MUST use Asaas through `PaymentProvider` and `AsaasPaymentProvider`
+- **FR-009**: Payment features MUST avoid persisting sensitive card data and MUST define safe persisted payment fields
+- **FR-010**: Asaas webhook features MUST define authenticity validation, audit storage, and idempotent duplicate handling
+- **FR-011**: Deploy-related features MUST cover GitHub, Vercel frontends, Dokploy API/worker, and local/staging/production environments
+- **FR-012**: Features that add or require configuration MUST update `.env.example`
+- **FR-013**: Features that change architecture, payments, deploy, data, tests, or decisions MUST update `/docs`
 
 *Example of marking unclear requirements:*
 
-- **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
-- **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
+- **FR-014**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
+- **FR-015**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
+
+### Automated Validation *(mandatory)*
+
+- **AV-001**: [Unit/static validation, e.g., "Vitest covers pricing calculation and ESLint passes affected packages"]
+- **AV-002**: [Integration validation, e.g., "Supertest covers API create/read/update flow"]
+- **AV-003**: [E2E validation, e.g., "Playwright covers buyer checkout journey"]
+- **AV-004**: [Payment validation, e.g., "Asaas webhook duplicate event does not duplicate paid order or enrollment"]
+- **AV-005**: [Deploy/config validation, e.g., "typecheck and required env documentation checks pass"]
 
 ### Key Entities *(include if feature involves data)*
 
