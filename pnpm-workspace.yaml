@@ -1,6 +1,7 @@
 packages:
   - "apps/*"
 allowBuilds:
+  msgpackr-extract: true
   sharp: true
   unrs-resolver: true
 minimumReleaseAgeExclude:
