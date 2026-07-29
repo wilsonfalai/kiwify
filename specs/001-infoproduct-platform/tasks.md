@@ -114,23 +114,23 @@
 
 ## FASE 5: Produtos e ofertas
 
-- [ ] T046 [US1] Criar ProductsModule na API em `apps/api/src/products/products.module.ts`
+- [X] T046 [US1] Criar ProductsModule na API em `apps/api/src/products/products.module.ts`
   - Objetivo: Base modular para produtos. Arquivos prováveis: `apps/api/src/products/*`, `packages/schemas/src/product.ts`. Critério de aceite: módulo registra controller/service. Teste obrigatório: module bootstrap. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run products-module`
-- [ ] T047 [US1] Criar CRUD de produtos em `apps/api/src/products`
+- [X] T047 [US1] Criar CRUD de produtos em `apps/api/src/products`
   - Objetivo: Permitir criar/listar/editar produtos do produtor. Arquivos prováveis: `apps/api/src/products/products.controller.ts`, `apps/api/src/products/products.service.ts`. Critério de aceite: produtor gerencia próprios produtos. Teste obrigatório: CRUD integration. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run products-crud`
-- [ ] T048 [US1] Criar sub-recurso de módulos em `apps/api/src/products/modules`
+- [X] T048 [US1] Criar sub-recurso de módulos em `apps/api/src/products/modules`
   - Objetivo: Criar e ordenar módulos. Arquivos prováveis: `apps/api/src/products/modules.controller.ts`, `apps/api/src/products/modules.service.ts`. Critério de aceite: módulos pertencem ao produto do produtor. Teste obrigatório: modules integration. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run product-modules`
-- [ ] T049 [US1] Criar sub-recurso de aulas em `apps/api/src/products/lessons`
+- [X] T049 [US1] Criar sub-recurso de aulas em `apps/api/src/products/lessons`
   - Objetivo: Criar e ordenar aulas. Arquivos prováveis: `apps/api/src/products/lessons.controller.ts`, `apps/api/src/products/lessons.service.ts`. Critério de aceite: valida text/video_url e ownership. Teste obrigatório: lessons integration. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run product-lessons`
-- [ ] T050 [US1] Criar OffersModule em `apps/api/src/offers/offers.module.ts`
+- [X] T050 [US1] Criar OffersModule em `apps/api/src/offers/offers.module.ts`
   - Objetivo: Base modular para ofertas. Arquivos prováveis: `apps/api/src/offers/*`, `packages/schemas/src/offer.ts`. Critério de aceite: módulo registra controller/service. Teste obrigatório: module bootstrap. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run offers-module`
-- [ ] T051 [US1] Criar regra de produto inativo em `apps/api/src/products/public-products.service.ts`
+- [X] T051 [US1] Criar regra de produto inativo em `apps/api/src/products/public-products.service.ts`
   - Objetivo: Ocultar produto inativo publicamente. Arquivos prováveis: `apps/api/src/products/public-products.service.ts`, `apps/api/test/public-products.e2e-spec.ts`. Critério de aceite: inativos retornam 404/não listam. Teste obrigatório: public product integration. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run public-products`
-- [ ] T052 [US1] Criar regra de oferta inativa em `apps/api/src/offers/offer-eligibility.service.ts`
+- [X] T052 [US1] Criar regra de oferta inativa em `apps/api/src/offers/offer-eligibility.service.ts`
   - Objetivo: Bloquear compra de oferta inativa. Arquivos prováveis: `apps/api/src/offers/offer-eligibility.service.ts`, `apps/api/test/offer-eligibility.e2e-spec.ts`. Critério de aceite: checkout rejeita oferta inativa. Teste obrigatório: eligibility integration. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run offer-eligibility`
-- [ ] T053 [US1] Criar telas admin de produtos em `apps/admin/app/products`
+- [X] T053 [US1] Criar telas admin de produtos em `apps/admin/app/products`
   - Objetivo: Listar/criar/editar produtos, módulos, aulas e ofertas. Arquivos prováveis: `apps/admin/app/products/page.tsx`, `apps/admin/app/products/[id]/*`, `apps/admin/components/product-form.tsx`. Critério de aceite: produtor executa fluxo de criação completo. Teste obrigatório: Playwright admin product flow. Comando para validar: `pnpm test:e2e -- --grep \"producer creates product\"`
-- [ ] T054 [US1] Criar tela pública de produto em `apps/products/app/[slug]/page.tsx`
+- [X] T054 [US1] Criar tela pública de produto em `apps/products/app/[slug]/page.tsx`
   - Objetivo: Exibir produto/oferta ativa. Arquivos prováveis: `apps/products/app/[slug]/page.tsx`, `apps/products/components/public-offer.tsx`. Critério de aceite: mostra título, descrição, preço, imagem opcional e botão comprar. Teste obrigatório: Playwright public product. Comando para validar: `pnpm test:e2e -- --grep \"public product\"`
 
 ## FASE 6: Integração Asaas

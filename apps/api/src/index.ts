@@ -1,11 +1,21 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { handleAuthRequest } from "./auth/auth.controller.js";
 import { healthResponse } from "./health/health.controller.js";
+import { handleOffersRequest } from "./offers/offers.controller.js";
+import { handleProductsRequest } from "./products/products.controller.js";
 
 export const appName = "api";
 
 export function handleApiRequest(request: IncomingMessage, response: ServerResponse) {
   if (handleAuthRequest(request, response)) {
+    return;
+  }
+
+  if (handleProductsRequest(request, response)) {
+    return;
+  }
+
+  if (handleOffersRequest(request, response)) {
     return;
   }
 

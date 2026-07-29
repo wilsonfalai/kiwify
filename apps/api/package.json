@@ -15,6 +15,7 @@
     "test:e2e": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@kiwifyclone/auth": "workspace:*"
+    "@kiwifyclone/auth": "workspace:*",
+    "@kiwifyclone/schemas": "workspace:*"
   }
 }
