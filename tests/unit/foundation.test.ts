@@ -119,7 +119,7 @@ describe("phase 1 monorepo foundation", () => {
 
       expect(config.buildCommand).toBe(`pnpm --filter @kiwifyclone/${app} build`);
       expect(config.installCommand).toBe("pnpm install --frozen-lockfile");
-      expect(config.outputDirectory).toBe("dist");
+      expect(config.outputDirectory).toBe(app === "checkout" ? ".next" : "dist");
       expect(JSON.stringify(config.env ?? {})).not.toMatch(/SECRET|TOKEN|ASAAS_API_KEY|DATABASE_URL|REDIS_URL/);
     }
   });

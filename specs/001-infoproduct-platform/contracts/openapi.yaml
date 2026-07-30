@@ -156,10 +156,31 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Offer"
+  /checkout/offers/{offerId}:
+    get:
+      tags: [Checkout]
+      summary: Validate offer and initialize checkout
+      parameters:
+        - $ref: "#/components/parameters/OfferId"
+      responses:
+        "200":
+          description: Active product and purchasable offer
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [product, offer]
+                properties:
+                  product:
+                    $ref: "#/components/schemas/Product"
+                  offer:
+                    $ref: "#/components/schemas/Offer"
+        "409":
+          description: Product or offer is not purchasable
   /checkout/orders:
     post:
       tags: [Checkout]
-      summary: Create order and initiate payment
+      summary: Create pending order with immutable offer snapshot
       requestBody:
         required: true
         content:
@@ -168,13 +189,13 @@ paths:
               $ref: "#/components/schemas/CreateCheckoutOrderRequest"
       responses:
         "201":
-          description: Order and payment created
+          description: Pending order created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CheckoutOrderResponse"
+                $ref: "#/components/schemas/CreateCheckoutOrderResponse"
         "409":
-          description: Offer inactive or payment method not allowed
+          description: Offer inactive
   /checkout/orders/{orderId}:
     get:
       tags: [Checkout]
@@ -188,6 +209,46 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OrderStatusResponse"
+  /checkout/orders/{orderId}/payments/pix:
+    post:
+      tags: [Checkout]
+      summary: Create Pix payment for pending order
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+      responses:
+        "201":
+          description: Pix payment created with safe instructions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutPaymentResponse"
+        "409":
+          description: Offer or payment method is not eligible
+        "502":
+          description: Safe provider failure
+  /checkout/orders/{orderId}/payments/credit-card:
+    post:
+      tags: [Checkout]
+      summary: Process transient credit-card payment for pending order
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreditCardPaymentRequest"
+      responses:
+        "201":
+          description: Credit-card payment processed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutPaymentResponse"
+        "409":
+          description: Offer or payment method is not eligible
+        "502":
+          description: Safe provider failure
   /members/products:
     get:
       tags: [Members]
@@ -347,6 +408,13 @@ components:
         format: uuid
     OrderId:
       name: orderId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    OfferId:
+      name: offerId
       in: path
       required: true
       schema:
@@ -544,14 +612,11 @@ components:
             enum: [pix, credit_card]
     CreateCheckoutOrderRequest:
       type: object
-      required: [offerId, customer, paymentMethod]
+      required: [offerId, customer]
       properties:
         offerId:
           type: string
           format: uuid
-        paymentMethod:
-          type: string
-          enum: [pix, credit_card]
         customer:
           type: object
           required: [name, email]
@@ -567,11 +632,70 @@ components:
             phone:
               type: string
               nullable: true
+    CreditCardPaymentRequest:
+      type: object
+      required: [card]
+      properties:
         card:
           type: object
-          description: Present only for credit_card. Must not be persisted by the platform.
-          additionalProperties: true
-    CheckoutOrderResponse:
+          description: Transient input that must never be persisted by the platform.
+          required: [number, holderName, expiryMonth, expiryYear, ccv, postalCode, addressNumber]
+          properties:
+            number:
+              type: string
+            holderName:
+              type: string
+            expiryMonth:
+              type: string
+            expiryYear:
+              type: string
+            ccv:
+              type: string
+            postalCode:
+              type: string
+            addressNumber:
+              type: string
+            addressComplement:
+              type: string
+              nullable: true
+    CreateCheckoutOrderResponse:
+      type: object
+      required: [order, item]
+      properties:
+        order:
+          type: object
+          required: [id, customerId, status, totalCents, currency]
+          properties:
+            id:
+              type: string
+            customerId:
+              type: string
+            status:
+              type: string
+              enum: [pending]
+            totalCents:
+              type: integer
+            currency:
+              type: string
+        item:
+          type: object
+          required: [id, orderId, offerId, productId, titleSnapshot, priceCents, currency]
+          properties:
+            id:
+              type: string
+            orderId:
+              type: string
+            offerId:
+              type: string
+            productId:
+              type: string
+            titleSnapshot:
+              type: string
+            priceCents:
+              type: integer
+            currency:
+              type: string
+    CheckoutPaymentResponse:
       type: object
       required: [orderId, paymentId, orderStatus, paymentStatus, paymentMethod]
       properties:
@@ -602,7 +726,7 @@ components:
               nullable: true
     OrderStatusResponse:
       type: object
-      required: [orderId, orderStatus, paymentStatus]
+      required: [orderId, orderStatus]
       properties:
         orderId:
           type: string
@@ -613,6 +737,8 @@ components:
         paymentStatus:
           type: string
           enum: [pending, approved, refused, canceled]
+        paymentId:
+          type: string
     MemberProduct:
       type: object
       required: [productId, title, enrollmentStatus]

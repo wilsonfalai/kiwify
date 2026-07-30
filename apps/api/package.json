@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@kiwifyclone/auth": "workspace:*",
-    "@kiwifyclone/schemas": "workspace:*"
+    "@kiwifyclone/schemas": "workspace:*",
+    "zod": "^4.4.3"
   }
 }
