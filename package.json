@@ -1,0 +1,30 @@
+{
+  "name": "kiwifyclone",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.24.0",
+  "type": "module",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "eslint .",
+    "typecheck": "turbo run typecheck",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "turbo run test:integration && vitest run tests/integration",
+    "test:e2e": "vitest run tests/e2e",
+    "ci": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:integration && pnpm test:e2e && pnpm build"
+  },
+  "devDependencies": {
+    "@eslint/js": "latest",
+    "@kiwifyclone/auth": "workspace:*",
+    "@types/node": "latest",
+    "@types/supertest": "^7.2.0",
+    "eslint": "latest",
+    "supertest": "^7.2.2",
+    "turbo": "latest",
+    "typescript": "latest",
+    "typescript-eslint": "latest",
+    "vitest": "latest"
+  }
+}
