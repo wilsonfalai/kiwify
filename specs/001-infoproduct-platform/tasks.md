@@ -158,31 +158,31 @@
 
 ## FASE 7: Checkout e pedidos
 
-- [ ] T065 [US2] Criar OrdersModule em `apps/api/src/orders/orders.module.ts`
+- [X] T065 [US2] Criar OrdersModule em `apps/api/src/orders/orders.module.ts`
   - Objetivo: Base de pedidos. Arquivos prováveis: `apps/api/src/orders/*`. Critério de aceite: módulo cria pedido pending. Teste obrigatório: orders module integration. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run orders-module`
-- [ ] T066 [US2] Criar PaymentsModule em `apps/api/src/payments/payments.module.ts`
+- [X] T066 [US2] Criar PaymentsModule em `apps/api/src/payments/payments.module.ts`
   - Objetivo: Orquestrar pagamentos. Arquivos prováveis: `apps/api/src/payments/payments.module.ts`, `apps/api/src/payments/payments.service.ts`. Critério de aceite: módulo injeta provider configurado. Teste obrigatório: payments module integration. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run payments-module`
-- [ ] T067 [US2] Criar endpoint iniciar checkout em `apps/api/src/checkout/checkout.controller.ts`
+- [X] T067 [US2] Criar endpoint iniciar checkout em `apps/api/src/checkout/checkout.controller.ts`
   - Objetivo: Validar oferta e dados iniciais. Arquivos prováveis: `apps/api/src/checkout/*`. Critério de aceite: retorna elegibilidade e bloqueia oferta inválida. Teste obrigatório: checkout start integration. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run checkout-start`
-- [ ] T068 [US2] Criar endpoint criar pedido em `apps/api/src/checkout/checkout.controller.ts`
+- [X] T068 [US2] Criar endpoint criar pedido em `apps/api/src/checkout/checkout.controller.ts`
   - Objetivo: Criar order e order_item. Arquivos prováveis: `apps/api/src/checkout/checkout.service.ts`. Critério de aceite: pedido pending com snapshot da oferta. Teste obrigatório: order creation integration. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run checkout-order`
-- [ ] T069 [US2] Criar endpoint pagamento Pix em `apps/api/src/checkout/pix.controller.ts`
+- [X] T069 [US2] Criar endpoint pagamento Pix em `apps/api/src/checkout/pix.controller.ts`
   - Objetivo: Criar cobrança Pix e salvar Payment. Arquivos prováveis: `apps/api/src/checkout/pix.controller.ts`, `apps/api/src/payments/payments.service.ts`. Critério de aceite: retorna status pending e instruções Pix quando disponíveis. Teste obrigatório: Pix checkout integration. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run checkout-pix`
-- [ ] T070 [US2] Criar endpoint pagamento cartão em `apps/api/src/checkout/card.controller.ts`
+- [X] T070 [US2] Criar endpoint pagamento cartão em `apps/api/src/checkout/card.controller.ts`
   - Objetivo: Processar cartão via provider. Arquivos prováveis: `apps/api/src/checkout/card.controller.ts`, `apps/api/src/payments/payments.service.ts`. Critério de aceite: não persiste dados sensíveis e salva retorno seguro. Teste obrigatório: card checkout integration. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run checkout-card`
-- [ ] T071 [US2] Criar tela checkout em `apps/checkout/app/[offerId]/page.tsx`
+- [X] T071 [US2] Criar tela checkout em `apps/checkout/app/[offerId]/page.tsx`
   - Objetivo: UI de compra de oferta ativa. Arquivos prováveis: `apps/checkout/app/[offerId]/page.tsx`, `apps/checkout/components/checkout-form.tsx`. Critério de aceite: comprador escolhe Pix/cartão e vê status inicial. Teste obrigatório: Playwright checkout page. Comando para validar: `pnpm test:e2e -- --grep \"checkout page\"`
-- [ ] T072 [US2] Criar formulário com Zod + React Hook Form em `apps/checkout/components/checkout-form.tsx`
+- [X] T072 [US2] Criar formulário com Zod + React Hook Form em `apps/checkout/components/checkout-form.tsx`
   - Objetivo: Validar dados do comprador. Arquivos prováveis: `apps/checkout/components/checkout-form.tsx`, `packages/schemas/src/checkout.ts`. Critério de aceite: erros de validação aparecem antes do submit. Teste obrigatório: component/unit validation. Comando para validar: `pnpm --filter @kiwifyclone/checkout test:unit -- --run checkout-form`
-- [ ] T073 [US2] Criar validação mínima de documento em `packages/schemas/src/customer.ts`
+- [X] T073 [US2] Criar validação mínima de documento em `packages/schemas/src/customer.ts`
   - Objetivo: Validar dados mínimos do comprador para Asaas. Arquivos prováveis: `packages/schemas/src/customer.ts`. Critério de aceite: nome/email são obrigatórios; documento fiscal e telefone são exigidos quando o método/provider exigir; formatos inválidos bloqueiam checkout. Teste obrigatório: schema unit. Comando para validar: `pnpm --filter @kiwifyclone/schemas test:unit -- --run customer-document`
-- [ ] T074 [US2] Criar status de pedido em `packages/schemas/src/order.ts`
+- [X] T074 [US2] Criar status de pedido em `packages/schemas/src/order.ts`
   - Objetivo: Padronizar `pending`, `paid`, `refused`, `canceled`. Arquivos prováveis: `packages/schemas/src/order.ts`, `packages/database/src/schema/orders.ts`. Critério de aceite: API e DB usam enum compartilhado. Teste obrigatório: enum consistency. Comando para validar: `pnpm --filter @kiwifyclone/schemas test:unit -- --run order-status`
-- [ ] T075 [US2] Criar status de pagamento em `packages/schemas/src/payment.ts`
+- [X] T075 [US2] Criar status de pagamento em `packages/schemas/src/payment.ts`
   - Objetivo: Padronizar `pending`, `approved`, `refused`, `canceled`. Arquivos prováveis: `packages/schemas/src/payment.ts`, `packages/database/src/schema/payments.ts`. Critério de aceite: mapper Asaas usa enum compartilhado. Teste obrigatório: enum consistency. Comando para validar: `pnpm --filter @kiwifyclone/schemas test:unit -- --run payment-status`
-- [ ] T076 [US2] Criar testes de integração do checkout em `apps/api/test/checkout.e2e-spec.ts`
+- [X] T076 [US2] Criar testes de integração do checkout em `apps/api/test/checkout.e2e-spec.ts`
   - Objetivo: Cobrir fluxo pedido + Pix/cartão. Arquivos prováveis: `apps/api/test/checkout.e2e-spec.ts`. Critério de aceite: happy paths e bloqueios passam com fake provider. Teste obrigatório: checkout integration suite. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run checkout`
-- [ ] T077 [US2] Garantir que dados sensíveis de pagamento não sejam persistidos/expostos em `apps/api/test/payment-security.e2e-spec.ts`
+- [X] T077 [US2] Garantir que dados sensíveis de pagamento não sejam persistidos/expostos em `apps/api/test/payment-security.e2e-spec.ts`
   - Objetivo: Provar ausência de cartão sensível, secrets e credenciais no banco/logs. Arquivos prováveis: `apps/api/test/payment-security.e2e-spec.ts`, `packages/test-utils/src/assert-no-sensitive-payment-data.ts`. Critério de aceite: buscas por número completo de cartão, CVV, `ASAAS_API_KEY`, `ASAAS_WEBHOOK_TOKEN`, senhas e payload bruto sensível falham em tabelas permitidas, logs e respostas administrativas. Teste obrigatório: payment security integration. Comando para validar: `pnpm --filter @kiwifyclone/api test:integration -- --run payment-security`
 
 ## FASE 8: Webhooks Asaas
