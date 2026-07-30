@@ -13,7 +13,7 @@ export interface AuthConfig {
   options: BetterAuthOptions;
 }
 
-export function createAuthConfig(env: AuthEnv = process.env): AuthConfig {
+export function createAuthConfig(env: AuthEnv = process.env as AuthEnv): AuthConfig {
   const secret = env.BETTER_AUTH_SECRET;
   const baseURL = env.BETTER_AUTH_URL;
 
@@ -51,6 +51,6 @@ export function createAuthConfig(env: AuthEnv = process.env): AuthConfig {
   };
 }
 
-export function createBetterAuth(env: AuthEnv = process.env) {
+export function createBetterAuth(env: AuthEnv = process.env as AuthEnv) {
   return betterAuth(createAuthConfig(env).options);
 }

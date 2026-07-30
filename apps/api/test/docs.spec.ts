@@ -49,7 +49,14 @@ describe("API documentation", () => {
     expect(document.openapi).toBe("3.1.0");
     expect(document.paths["/health"]?.get).toBeDefined();
     expect(document.paths["/producer/products/{productId}"]?.patch).toBeDefined();
-    expect(document.paths["/checkout/orders"]).toBeUndefined();
+    expect(document.paths["/checkout/orders"]?.post).toBeDefined();
+    expect(
+      document.paths["/checkout/orders/{orderId}/payments/pix"]?.post
+    ).toBeDefined();
+    expect(
+      document.paths["/checkout/orders/{orderId}/payments/credit-card"]?.post
+    ).toBeDefined();
+    expect(document.paths["/webhooks/asaas"]).toBeUndefined();
   });
 
   it.each(["/docs", "/docs/"])("serves Scalar at %s", (path) => {

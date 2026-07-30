@@ -1,13 +1,25 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { handleAuthRequest } from "./auth/auth.controller.js";
+import { handleCheckoutModuleRequest } from "./checkout/checkout.module.js";
 import { handleDocsRequest } from "./docs/docs.controller.js";
 import { healthResponse } from "./health/health.controller.js";
+import { readJsonBody, sendJson, type RequestWithBody } from "./http.js";
 import { handleOffersRequest } from "./offers/offers.controller.js";
 import { handleProductsRequest } from "./products/products.controller.js";
 
 export const appName = "api";
 
-export function handleApiRequest(request: IncomingMessage, response: ServerResponse) {
+export async function handleApiRequest(request: IncomingMessage, response: ServerResponse) {
+  if (request.method === "OPTIONS") {
+    response.writeHead(204, {
+      "access-control-allow-origin": "*",
+      "access-control-allow-methods": "GET,POST,PATCH,OPTIONS",
+      "access-control-allow-headers": "content-type,x-kiwifyclone-session"
+    });
+    response.end();
+    return;
+  }
+
   if (handleDocsRequest(request, response)) {
     return;
   }
@@ -35,12 +47,35 @@ export function handleApiRequest(request: IncomingMessage, response: ServerRespo
     return;
   }
 
+  if ((request.url ?? "").startsWith("/checkout/")) {
+    if (await handleCheckoutModuleRequest(request, response)) {
+      return;
+    }
+  }
+
   response.writeHead(404, { "content-type": "application/json" });
   response.end(JSON.stringify({ error: "not_found" }));
 }
 
 export function createApiServer() {
-  return createServer(handleApiRequest);
+  return createServer((request, response) => {
+    void (async () => {
+      try {
+        if (["POST", "PATCH", "PUT"].includes(request.method ?? "")) {
+          (request as IncomingMessage & RequestWithBody).body =
+            await readJsonBody<unknown>(request);
+        }
+
+        await handleApiRequest(request, response);
+      } catch (error) {
+        if (!response.headersSent) {
+          sendJson(response, 400, {
+            error: error instanceof SyntaxError ? "invalid_json" : "invalid_request"
+          });
+        }
+      }
+    })();
+  });
 }
 
 if (process.env.NODE_ENV !== "test") {

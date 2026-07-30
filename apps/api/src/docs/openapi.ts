@@ -38,7 +38,8 @@ export const runtimeOpenApiDocument = {
     { name: "Health", description: "Disponibilidade do serviço" },
     { name: "Auth", description: "Sessão e autorização por perfil" },
     { name: "Products", description: "Catálogo público e produtos do produtor" },
-    { name: "Offers", description: "Ofertas e elegibilidade de pagamento" }
+    { name: "Offers", description: "Ofertas e elegibilidade de pagamento" },
+    { name: "Checkout", description: "Criação de pedidos e pagamentos Pix/cartão" }
   ],
   paths: {
     "/health": {
@@ -352,6 +353,140 @@ export const runtimeOpenApiDocument = {
           }
         }
       }
+    },
+    "/checkout/offers/{offerId}": {
+      get: {
+        tags: ["Checkout"],
+        summary: "Iniciar checkout de uma oferta",
+        operationId: "startCheckout",
+        parameters: [{ $ref: "#/components/parameters/OfferId" }],
+        responses: {
+          "200": {
+            description: "Produto e oferta elegíveis para checkout",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/CheckoutStartResponse" }
+              }
+            }
+          },
+          "409": {
+            ...errorResponse,
+            description: "Produto ou oferta indisponível"
+          }
+        }
+      }
+    },
+    "/checkout/orders": {
+      post: {
+        tags: ["Checkout"],
+        summary: "Criar pedido pendente",
+        operationId: "createCheckoutOrder",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/CreateCheckoutOrderRequest" }
+            }
+          }
+        },
+        responses: {
+          "201": {
+            description: "Pedido pendente criado com snapshot da oferta",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/CreateCheckoutOrderResponse" }
+              }
+            }
+          },
+          "400": errorResponse,
+          "409": {
+            ...errorResponse,
+            description: "Oferta indisponível"
+          }
+        }
+      }
+    },
+    "/checkout/orders/{orderId}": {
+      get: {
+        tags: ["Checkout"],
+        summary: "Consultar status do pedido",
+        operationId: "getCheckoutOrderStatus",
+        parameters: [{ $ref: "#/components/parameters/OrderId" }],
+        responses: {
+          "200": {
+            description: "Status atual do pedido e pagamento",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/OrderStatusResponse" }
+              }
+            }
+          },
+          "404": {
+            ...errorResponse,
+            description: "Pedido não encontrado"
+          }
+        }
+      }
+    },
+    "/checkout/orders/{orderId}/payments/pix": {
+      post: {
+        tags: ["Checkout"],
+        summary: "Criar pagamento Pix",
+        operationId: "createPixPayment",
+        parameters: [{ $ref: "#/components/parameters/OrderId" }],
+        responses: {
+          "201": {
+            description: "Cobrança Pix criada",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/CheckoutPaymentResponse" }
+              }
+            }
+          },
+          "400": errorResponse,
+          "404": errorResponse,
+          "409": errorResponse,
+          "502": {
+            ...errorResponse,
+            description: "Falha segura na comunicação com o provedor"
+          }
+        }
+      }
+    },
+    "/checkout/orders/{orderId}/payments/credit-card": {
+      post: {
+        tags: ["Checkout"],
+        summary: "Processar pagamento com cartão",
+        description:
+          "Os dados do cartão são transitórios e nunca são persistidos, exibidos em respostas ou registrados em logs.",
+        operationId: "createCreditCardPayment",
+        parameters: [{ $ref: "#/components/parameters/OrderId" }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/CreditCardPaymentRequest" }
+            }
+          }
+        },
+        responses: {
+          "201": {
+            description: "Pagamento processado pelo provider configurado",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/CheckoutPaymentResponse" }
+              }
+            }
+          },
+          "400": errorResponse,
+          "404": errorResponse,
+          "409": errorResponse,
+          "502": {
+            ...errorResponse,
+            description: "Falha segura na comunicação com o provedor"
+          }
+        }
+      }
     }
   },
   components: {
@@ -367,6 +502,18 @@ export const runtimeOpenApiDocument = {
     parameters: {
       ProductId: {
         name: "productId",
+        in: "path",
+        required: true,
+        schema: { type: "string" }
+      },
+      OfferId: {
+        name: "offerId",
+        in: "path",
+        required: true,
+        schema: { type: "string" }
+      },
+      OrderId: {
+        name: "orderId",
         in: "path",
         required: true,
         schema: { type: "string" }
@@ -577,6 +724,168 @@ export const runtimeOpenApiDocument = {
           reason: {
             type: "string",
             enum: ["offer_not_purchasable", "payment_method_not_allowed"]
+          }
+        }
+      },
+      CheckoutCustomer: {
+        type: "object",
+        required: ["name", "email"],
+        properties: {
+          name: { type: "string", minLength: 2 },
+          email: { type: "string", format: "email" },
+          document: {
+            type: "string",
+            description: "CPF ou CNPJ, com 11 ou 14 dígitos"
+          },
+          phone: {
+            type: "string",
+            description: "Telefone com DDD"
+          }
+        }
+      },
+      CheckoutStartResponse: {
+        type: "object",
+        required: ["product", "offer"],
+        properties: {
+          product: { $ref: "#/components/schemas/Product" },
+          offer: { $ref: "#/components/schemas/Offer" }
+        }
+      },
+      CreateCheckoutOrderRequest: {
+        type: "object",
+        required: ["offerId", "customer"],
+        properties: {
+          offerId: { type: "string" },
+          customer: { $ref: "#/components/schemas/CheckoutCustomer" }
+        }
+      },
+      Order: {
+        type: "object",
+        required: [
+          "id",
+          "customerId",
+          "status",
+          "totalCents",
+          "currency",
+          "createdAt",
+          "updatedAt"
+        ],
+        properties: {
+          id: { type: "string" },
+          customerId: { type: "string" },
+          status: {
+            type: "string",
+            enum: ["pending", "paid", "refused", "canceled"]
+          },
+          totalCents: { type: "integer", minimum: 1 },
+          currency: { type: "string", minLength: 3, maxLength: 3 },
+          createdAt: { type: "string", format: "date-time" },
+          updatedAt: { type: "string", format: "date-time" },
+          paidAt: { type: "string", format: "date-time" }
+        }
+      },
+      OrderItem: {
+        type: "object",
+        required: [
+          "id",
+          "orderId",
+          "offerId",
+          "productId",
+          "titleSnapshot",
+          "priceCents",
+          "currency"
+        ],
+        properties: {
+          id: { type: "string" },
+          orderId: { type: "string" },
+          offerId: { type: "string" },
+          productId: { type: "string" },
+          titleSnapshot: { type: "string" },
+          priceCents: { type: "integer", minimum: 1 },
+          currency: { type: "string", minLength: 3, maxLength: 3 }
+        }
+      },
+      CreateCheckoutOrderResponse: {
+        type: "object",
+        required: ["order", "item"],
+        properties: {
+          order: { $ref: "#/components/schemas/Order" },
+          item: { $ref: "#/components/schemas/OrderItem" }
+        }
+      },
+      CreditCardPaymentRequest: {
+        type: "object",
+        required: ["card"],
+        properties: {
+          card: {
+            type: "object",
+            description: "Dados transitórios enviados diretamente ao provider.",
+            required: [
+              "number",
+              "holderName",
+              "expiryMonth",
+              "expiryYear",
+              "ccv",
+              "postalCode",
+              "addressNumber"
+            ],
+            properties: {
+              number: { type: "string", minLength: 12, maxLength: 19 },
+              holderName: { type: "string" },
+              expiryMonth: { type: "string", pattern: "^(0[1-9]|1[0-2])$" },
+              expiryYear: { type: "string", pattern: "^\\d{4}$" },
+              ccv: { type: "string", pattern: "^\\d{3,4}$" },
+              postalCode: { type: "string", pattern: "^\\d{8}$" },
+              addressNumber: { type: "string" },
+              addressComplement: { type: "string" }
+            }
+          }
+        }
+      },
+      CheckoutPaymentResponse: {
+        type: "object",
+        required: [
+          "orderId",
+          "paymentId",
+          "orderStatus",
+          "paymentStatus",
+          "paymentMethod"
+        ],
+        properties: {
+          orderId: { type: "string" },
+          paymentId: { type: "string" },
+          orderStatus: {
+            type: "string",
+            enum: ["pending", "paid", "refused", "canceled"]
+          },
+          paymentStatus: {
+            type: "string",
+            enum: ["pending", "approved", "refused", "canceled"]
+          },
+          paymentMethod: { $ref: "#/components/schemas/PaymentMethod" },
+          pix: {
+            type: "object",
+            properties: {
+              qrCode: { type: "string" },
+              payload: { type: "string" },
+              expirationDate: { type: "string", format: "date" }
+            }
+          }
+        }
+      },
+      OrderStatusResponse: {
+        type: "object",
+        required: ["orderId", "orderStatus"],
+        properties: {
+          orderId: { type: "string" },
+          orderStatus: {
+            type: "string",
+            enum: ["pending", "paid", "refused", "canceled"]
+          },
+          paymentId: { type: "string" },
+          paymentStatus: {
+            type: "string",
+            enum: ["pending", "approved", "refused", "canceled"]
           }
         }
       }

@@ -1,7 +1,7 @@
 import { z } from "zod";
+import { paymentMethodSchema } from "./payment.js";
 
 export const offerStatusSchema = z.enum(["active", "inactive"]);
-export const paymentMethodSchema = z.enum(["pix", "credit_card"]);
 
 export const offerSchema = z.object({
   id: z.string().min(1),
@@ -24,6 +24,6 @@ export const createOfferSchema = z.object({
 });
 
 export type OfferStatus = z.infer<typeof offerStatusSchema>;
-export type PaymentMethod = z.infer<typeof paymentMethodSchema>;
+export type { PaymentMethod } from "./payment.js";
 export type Offer = z.infer<typeof offerSchema>;
 export type CreateOfferInput = z.input<typeof createOfferSchema>;

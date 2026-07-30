@@ -44,6 +44,21 @@ Card input is transient request data. It must never be persisted or logged.
 Provider failures are converted to safe codes without including response
 payloads. Requests time out and surface a retryable availability error.
 
+## Checkout API
+
+The runtime creates the order before contacting the configured provider:
+
+1. `GET /checkout/offers/{offerId}` validates the active product and offer.
+2. `POST /checkout/orders` stores a pending order and an immutable offer snapshot.
+3. `POST /checkout/orders/{orderId}/payments/pix` creates the customer and Pix charge.
+4. `POST /checkout/orders/{orderId}/payments/credit-card` sends transient card data to the provider.
+5. `GET /checkout/orders/{orderId}` returns the initial order and payment status.
+
+Internal persistence contains customer contact data, order/payment state,
+external IDs, Pix instructions, and safe status metadata only. Card number, CVV,
+credentials, passwords, webhook tokens, and raw sensitive payloads are excluded
+from repositories, responses, and logs.
+
 Official references:
 
 - https://docs.asaas.com/reference/criar-novo-cliente

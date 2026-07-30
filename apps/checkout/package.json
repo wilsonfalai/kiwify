@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node --watch dist/index.js",
-    "build": "tsc -p tsconfig.json",
+    "dev": "next dev --webpack --port 3002",
+    "start": "next start --port 3002",
+    "build": "next build",
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --passWithNoTests",
@@ -14,6 +15,17 @@
     "test:e2e": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@kiwifyclone/auth": "workspace:*"
+    "@hookform/resolvers": "^5.2.2",
+    "@kiwifyclone/auth": "workspace:*",
+    "@kiwifyclone/schemas": "workspace:*",
+    "next": "^16.2.9",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-hook-form": "^7.62.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3"
   }
 }
