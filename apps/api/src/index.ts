@@ -1,5 +1,6 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { handleAuthRequest } from "./auth/auth.controller.js";
+import { handleDocsRequest } from "./docs/docs.controller.js";
 import { healthResponse } from "./health/health.controller.js";
 import { handleOffersRequest } from "./offers/offers.controller.js";
 import { handleProductsRequest } from "./products/products.controller.js";
@@ -7,6 +8,10 @@ import { handleProductsRequest } from "./products/products.controller.js";
 export const appName = "api";
 
 export function handleApiRequest(request: IncomingMessage, response: ServerResponse) {
+  if (handleDocsRequest(request, response)) {
+    return;
+  }
+
   if (handleAuthRequest(request, response)) {
     return;
   }
