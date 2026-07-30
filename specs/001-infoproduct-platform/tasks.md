@@ -135,26 +135,26 @@
 
 ## FASE 6: Integração Asaas
 
-- [ ] T055 [US2] Criar interface PaymentProvider em `apps/api/src/payments/payment-provider.ts`
-  - Objetivo: Isolar domínio de provedores. Arquivos prováveis: `apps/api/src/payments/payment-provider.ts`, `packages/schemas/src/payment.ts`. Critério de aceite: interface cobre customer, Pix, cartão e webhook parse. Teste obrigatório: contract unit. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- --run payment-provider-contract`
-- [ ] T056 [US2] Criar AsaasPaymentProvider em `apps/api/src/payments/asaas-payment-provider.ts`
-  - Objetivo: Implementar provider Asaas. Arquivos prováveis: `apps/api/src/payments/asaas-payment-provider.ts`. Critério de aceite: classe implementa interface sem vazar payload para domínio. Teste obrigatório: provider unit with mocks. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- --run asaas-provider`
-- [ ] T057 [US2] Criar FakePaymentProvider em `apps/api/src/payments/fake-payment-provider.ts`
-  - Objetivo: Suportar testes e desenvolvimento local. Arquivos prováveis: `apps/api/src/payments/fake-payment-provider.ts`, `packages/test-utils/src/payments.ts`. Critério de aceite: fake retorna Pix/cartão/status previsíveis. Teste obrigatório: fake provider unit. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- --run fake-payment-provider`
-- [ ] T058 [US2] Criar configuração Asaas em `apps/api/src/payments/payments.env.ts`
-  - Objetivo: Validar `ASAAS_API_KEY`, `ASAAS_BASE_URL`, `ASAAS_ENVIRONMENT`. Arquivos prováveis: `apps/api/src/payments/payments.env.ts`, `.env.example`. Critério de aceite: env inválida falha cedo e segura. Teste obrigatório: env unit. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- --run payments-env`
-- [ ] T059 [US2] Criar método createCustomer em `AsaasPaymentProvider`
-  - Objetivo: Criar/localizar cliente Asaas. Arquivos prováveis: `apps/api/src/payments/asaas-payment-provider.ts`, `apps/api/src/payments/dto.ts`. Critério de aceite: retorna externalCustomerId seguro. Teste obrigatório: mocked Asaas customer. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- --run asaas-create-customer`
-- [ ] T060 [US2] Criar método createPixCharge em `AsaasPaymentProvider`
-  - Objetivo: Criar cobrança Pix. Arquivos prováveis: `apps/api/src/payments/asaas-payment-provider.ts`. Critério de aceite: retorna charge id/status e instruções Pix seguras. Teste obrigatório: mocked Pix charge. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- --run asaas-pix-charge`
-- [ ] T061 [US2] Criar método createCreditCardCharge em `AsaasPaymentProvider`
-  - Objetivo: Processar cartão sem persistir dados sensíveis. Arquivos prováveis: `apps/api/src/payments/asaas-payment-provider.ts`. Critério de aceite: card input não aparece em retorno seguro. Teste obrigatório: no-sensitive-card test. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- --run asaas-card-charge`
-- [ ] T062 [US2] Criar normalização de status Asaas em `apps/api/src/payments/payment-status.mapper.ts`
-  - Objetivo: Mapear status provider para interno. Arquivos prováveis: `apps/api/src/payments/payment-status.mapper.ts`. Critério de aceite: approved/pending/refused cobertos e unknown não muda estado. Teste obrigatório: mapper unit. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- --run payment-status-mapper`
-- [ ] T063 [US2] Criar testes unitários do provider com mocks em `apps/api/src/payments/*.spec.ts`
-  - Objetivo: Cobrir happy paths Asaas. Arquivos prováveis: `apps/api/src/payments/asaas-payment-provider.spec.ts`. Critério de aceite: customer, Pix e cartão aprovam com mocks. Teste obrigatório: provider unit suite. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- --run asaas-provider`
-- [ ] T064 [US2] Criar testes de erro do provider em `apps/api/src/payments/asaas-payment-provider.errors.spec.ts`
-  - Objetivo: Cobrir comunicação, cobrança recusada, resposta inválida e timeout. Arquivos prováveis: `apps/api/src/payments/asaas-payment-provider.errors.spec.ts`. Critério de aceite: erros viram falhas seguras sem dados sensíveis. Teste obrigatório: provider error suite. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- --run asaas-provider-errors`
+- [X] T055 [US2] Criar interface PaymentProvider em `apps/api/src/payments/payment-provider.ts`
+  - Objetivo: Isolar domínio de provedores. Arquivos prováveis: `apps/api/src/payments/payment-provider.ts`, `packages/schemas/src/payment.ts`. Critério de aceite: interface cobre customer, Pix, cartão e webhook parse. Teste obrigatório: contract unit. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- src/payments/payment-provider.contract.spec.ts`
+- [X] T056 [US2] Criar AsaasPaymentProvider em `apps/api/src/payments/asaas-payment-provider.ts`
+  - Objetivo: Implementar provider Asaas. Arquivos prováveis: `apps/api/src/payments/asaas-payment-provider.ts`. Critério de aceite: classe implementa interface sem vazar payload para domínio. Teste obrigatório: provider unit with mocks. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- src/payments/asaas-payment-provider.spec.ts`
+- [X] T057 [US2] Criar FakePaymentProvider em `apps/api/src/payments/fake-payment-provider.ts`
+  - Objetivo: Suportar testes e desenvolvimento local. Arquivos prováveis: `apps/api/src/payments/fake-payment-provider.ts`, `packages/test-utils/src/payments.ts`. Critério de aceite: fake retorna Pix/cartão/status previsíveis. Teste obrigatório: fake provider unit. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- src/payments/fake-payment-provider.spec.ts`
+- [X] T058 [US2] Criar configuração Asaas em `apps/api/src/payments/payments.env.ts`
+  - Objetivo: Validar `ASAAS_API_KEY`, `ASAAS_BASE_URL`, `ASAAS_ENVIRONMENT`. Arquivos prováveis: `apps/api/src/payments/payments.env.ts`, `.env.example`. Critério de aceite: env inválida falha cedo e segura. Teste obrigatório: env unit. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- src/payments/payments.env.spec.ts`
+- [X] T059 [US2] Criar método createCustomer em `AsaasPaymentProvider`
+  - Objetivo: Criar/localizar cliente Asaas. Arquivos prováveis: `apps/api/src/payments/asaas-payment-provider.ts`, `apps/api/src/payments/dto.ts`. Critério de aceite: retorna externalCustomerId seguro. Teste obrigatório: mocked Asaas customer. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- src/payments/asaas-payment-provider.spec.ts`
+- [X] T060 [US2] Criar método createPixCharge em `AsaasPaymentProvider`
+  - Objetivo: Criar cobrança Pix. Arquivos prováveis: `apps/api/src/payments/asaas-payment-provider.ts`. Critério de aceite: retorna charge id/status e instruções Pix seguras. Teste obrigatório: mocked Pix charge. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- src/payments/asaas-payment-provider.spec.ts`
+- [X] T061 [US2] Criar método createCreditCardCharge em `AsaasPaymentProvider`
+  - Objetivo: Processar cartão sem persistir dados sensíveis. Arquivos prováveis: `apps/api/src/payments/asaas-payment-provider.ts`. Critério de aceite: card input não aparece em retorno seguro. Teste obrigatório: no-sensitive-card test. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- src/payments/asaas-payment-provider.spec.ts`
+- [X] T062 [US2] Criar normalização de status Asaas em `apps/api/src/payments/payment-status.mapper.ts`
+  - Objetivo: Mapear status provider para interno. Arquivos prováveis: `apps/api/src/payments/payment-status.mapper.ts`. Critério de aceite: approved/pending/refused cobertos e unknown não muda estado. Teste obrigatório: mapper unit. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- src/payments/payment-status.mapper.spec.ts`
+- [X] T063 [US2] Criar testes unitários do provider com mocks em `apps/api/src/payments/*.spec.ts`
+  - Objetivo: Cobrir happy paths Asaas. Arquivos prováveis: `apps/api/src/payments/asaas-payment-provider.spec.ts`. Critério de aceite: customer, Pix e cartão aprovam com mocks. Teste obrigatório: provider unit suite. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- src/payments/asaas-payment-provider.spec.ts`
+- [X] T064 [US2] Criar testes de erro do provider em `apps/api/src/payments/asaas-payment-provider.errors.spec.ts`
+  - Objetivo: Cobrir comunicação, cobrança recusada, resposta inválida e timeout. Arquivos prováveis: `apps/api/src/payments/asaas-payment-provider.errors.spec.ts`. Critério de aceite: erros viram falhas seguras sem dados sensíveis. Teste obrigatório: provider error suite. Comando para validar: `pnpm --filter @kiwifyclone/api test:unit -- src/payments/asaas-payment-provider.errors.spec.ts`
 
 ## FASE 7: Checkout e pedidos
 
