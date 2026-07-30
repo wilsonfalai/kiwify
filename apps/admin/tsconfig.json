@@ -4,5 +4,5 @@
     "rootDir": ".",
     "outDir": "dist"
   },
-  "include": ["src/**/*.ts", "middleware.ts"]
+  "include": ["src/**/*.ts", "app/**/*.ts", "components/**/*.ts", "middleware.ts"]
 }
