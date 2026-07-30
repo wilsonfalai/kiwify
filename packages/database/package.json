@@ -4,8 +4,14 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./schema": "./src/schema/index.ts"
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/src/index.js"
+    },
+    "./schema": {
+      "types": "./src/schema/index.ts",
+      "default": "./dist/src/schema/index.js"
+    }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
